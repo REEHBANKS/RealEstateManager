@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
     defaultConfig {
         applicationId "com.openclassrooms.realestatemanager"
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -23,6 +23,11 @@ android {
     viewBinding {
         enabled = true
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 dependencies {
@@ -34,6 +39,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    // Android Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.5"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.5"
 
 
 
