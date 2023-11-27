@@ -19,7 +19,7 @@ class ListRealEstatePropertyFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentListRealEstatePropertyBinding.inflate(inflater, container, false)
 
-        // Création de données fictives
+      /*  // Création de données fictives
         val properties = listOf(
             PropertyModels("Le Manoir"),
             PropertyModels("La Villa"),
@@ -27,11 +27,11 @@ class ListRealEstatePropertyFragment : Fragment() {
             PropertyModels("L'Appartement"),
             PropertyModels("Le Studio")
         )
-
+*/
         // Configuration du RecyclerView
         binding.propertiesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = PropertyAdapter(properties,requireContext())
+       //     adapter = PropertyAdapter(properties,requireContext())
         }
 
 
