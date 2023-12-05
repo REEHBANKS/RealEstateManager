@@ -1,21 +1,17 @@
-package com.openclassrooms.realestatemanager.activity
+package com.openclassrooms.realestatemanager.view.activity
 
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.Utils
 import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
 import androidx.appcompat.widget.Toolbar
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
-import com.openclassrooms.realestatemanager.fragment.DetailFragment
-import com.openclassrooms.realestatemanager.fragment.IntroDetailFragment
+import com.openclassrooms.realestatemanager.view.fragment.DetailFragment
+import com.openclassrooms.realestatemanager.view.fragment.IntroDetailFragment
 
 
 class MainActivity : AppCompatActivity() {

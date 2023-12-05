@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.fragment
+package com.openclassrooms.realestatemanager.view.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.openclassrooms.realestatemanager.PropertyAdapter
-import com.openclassrooms.realestatemanager.activity.MainActivity
 import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstatePropertyBinding
-import com.openclassrooms.realestatemanager.models.PropertyModels
 
 
 class ListRealEstatePropertyFragment : Fragment() {

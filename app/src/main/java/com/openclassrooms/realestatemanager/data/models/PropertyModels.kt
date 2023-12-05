@@ -1,9 +1,9 @@
-package com.openclassrooms.realestatemanager.models
+package com.openclassrooms.realestatemanager.data.models
 
 import java.util.Date
 
 data class PropertyModels(
-    val id: String,
+    var id: String,
     var type: String, // flat, loft, duplex, house
     var price: Double, // in dollars
     var area: Double, // in square meters
