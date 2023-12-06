@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/listRealEstatePropertyFragment2"
-        android:name="com.openclassrooms.realestatemanager.view.fragment.ListRealEstatePropertyFragment"
+        android:name="com.openclassrooms.realestatemanager.view.fragment.ListPropertyFragment"
         android:label="fragment_list_real_estate_property"
         tools:layout="@layout/fragment_list_real_estate_property" >
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/mapRealEstatePropertyFragment"
-        android:name="com.openclassrooms.realestatemanager.view.fragment.MapRealEstatePropertyFragment"
+        android:name="com.openclassrooms.realestatemanager.view.fragment.MapPropertyFragment"
         android:label="fragment_map_real_estate_property"
         tools:layout="@layout/fragment_map_real_estate_property" >
         <action

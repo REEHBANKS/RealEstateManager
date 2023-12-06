@@ -1,8 +1,10 @@
 package com.openclassrooms.realestatemanager.view.adapter
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,40 +13,33 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.view.activity.DetailActivity
 import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstatePropertyFragmentItemBinding
 import com.openclassrooms.realestatemanager.data.models.PropertyModels
+import com.openclassrooms.realestatemanager.data.models.PropertyWithMainPicture
 
 
+class PropertyAdapter(private val context: Context) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
 
-class PropertyAdapter(private val properties: List<PropertyModels>, private val context: Context) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
+    private var properties: List<PropertyWithMainPicture> = listOf()
 
     class PropertyViewHolder(val binding: FragmentListRealEstatePropertyFragmentItemBinding) : RecyclerView.ViewHolder(binding.root)
 
+
+    fun submitList(newProperties: List<PropertyWithMainPicture>) {
+        properties = newProperties
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PropertyViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
+        val layoutInflater = LayoutInflater.from(context)
         val binding = FragmentListRealEstatePropertyFragmentItemBinding.inflate(layoutInflater, parent, false)
         return PropertyViewHolder(binding)
     }
 
-
-    // TODO à retirer
-
     override fun onBindViewHolder(holder: PropertyViewHolder, position: Int) {
-      //  holder.binding.textViewPropertyName.text = properties[position].name
-        holder.itemView.setOnClickListener {
-            // Vérifiez si vous êtes en mode tablette en cherchant le conteneur de détail dans la mise en page actuelle.
-            val detailContainer = (context as Activity).findViewById<View>(R.id.detail_container)
-            if (detailContainer != null) {
-                // Mode tablette: chargez le DetailFragment dans le conteneur.
-           //     (context as MainActivity).showDetailFragment(properties[position].name)
-            } else {
-                // Mode téléphone: démarrez une nouvelle DetailActivity.
-                val intent = Intent(context, DetailActivity::class.java).apply {
-               //     putExtra("EXTRA_DETAIL", properties[position].name)
-                }
-                context.startActivity(intent)
-            }
-        }
+        val property = properties[position]
+        holder.binding.textViewPropertyName.text = property.property.type
     }
 
     override fun getItemCount() = properties.size
 }
+
 

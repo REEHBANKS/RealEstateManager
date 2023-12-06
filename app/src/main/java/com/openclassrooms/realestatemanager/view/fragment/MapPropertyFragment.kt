@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.FragmentMapRealEstatePropertyBinding
 
-class MapRealEstatePropertyFragment : Fragment() {
+class MapPropertyFragment : Fragment() {
 
     // Déclaration du binding avec un type nullable et sans initialisation immédiate
     private var _binding: FragmentMapRealEstatePropertyBinding? = null

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
@@ -12,8 +13,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import com.openclassrooms.realestatemanager.view.fragment.DetailFragment
 import com.openclassrooms.realestatemanager.view.fragment.IntroDetailFragment
+import com.openclassrooms.realestatemanager.viewmodel.ListPropertyViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         // Vérifier si le conteneur de détails existe dans la mise en page
         val isTabletMode = findViewById<View>(R.id.detail_container) != null
         Log.d("RENEL", "Mode tablette: $isTabletMode")
+
 
 
     }
@@ -89,6 +93,7 @@ class MainActivity : AppCompatActivity() {
            }
        }
    */
+
 
     // Dans MainActivity.kt
     fun showDetailFragment(detailString: String) {
