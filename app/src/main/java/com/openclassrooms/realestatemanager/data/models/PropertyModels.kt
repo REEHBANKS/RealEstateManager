@@ -10,7 +10,6 @@ data class PropertyModels(
     var numberOfRooms: Int,
     var numberOfBathrooms:Int,
     var fullDescription: String,
-    var photos: List<PhotoDescription>, // Assuming you have a PhotoDescription class
     var address: String,
     var neighborhood: String,
     var nearbyPointsOfInterest: List<String>, // schools, shops, parks, etc.
@@ -22,7 +21,3 @@ data class PropertyModels(
     var longitude: Double
 )
 
-data class PhotoDescription(
-    var uri: String,
-    var description: String
-)

@@ -5,7 +5,7 @@ import com.google.firebase.firestore.toObject
 import com.openclassrooms.realestatemanager.data.models.AgentModels
 import kotlinx.coroutines.tasks.await
 
-class UserRepository(private val firestore: FirebaseFirestore) {
+class AgentRepository(private val firestore: FirebaseFirestore) {
 
     suspend fun addAgent(agent: AgentModels): Boolean {
         return try {
