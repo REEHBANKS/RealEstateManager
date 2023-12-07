@@ -3,24 +3,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imageViewProperty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="5dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/picture_intro"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textViewPropertyType"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewPropertyPrice" />
 
     <TextView
-        android:id="@+id/textViewPropertyName"
+        android:id="@+id/textViewPropertyType"
         android:layout_width="0dp"
-    android:layout_height="wrap_content"
-        android:text="le Manoir"
-    android:textSize="18sp"
-    android:textStyle="bold"
-        android:layout_marginStart="20dp"
-    app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="30dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Flat"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColorHighlight="@color/colorPrimaryDark"
+        app:layout_constraintStart_toEndOf="@id/imageViewProperty"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <TextView
+        android:id="@+id/textViewPropertyNeighborhood"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Manhattan"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/textViewPropertyType"
+        app:layout_constraintTop_toBottomOf="@id/textViewPropertyType" />
+
+    <TextView
+        android:id="@+id/textViewPropertyPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="$17,870,000"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="@id/textViewPropertyNeighborhood"
+        app:layout_constraintTop_toBottomOf="@id/textViewPropertyNeighborhood"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
