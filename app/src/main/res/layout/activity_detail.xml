@@ -1,13 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/detailTextView"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="24sp" />
-</RelativeLayout>
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/galleryViewPager"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:src="@drawable/picture_intro"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/priceTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:text="500000€"
+            app:layout_constraintTop_toBottomOf="@id/galleryViewPager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed" />
+
+
+
+        <TextView
+            android:id="@+id/typeDetailPhoneTextView"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/colorBlack"
+            android:text="Maison"
+            app:layout_constraintTop_toBottomOf="@id/priceTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread" />
+
+
+
+        <ImageView
+            android:id="@+id/iconView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/baseline_m2"
+            app:layout_constraintTop_toBottomOf="@+id/typeDetailPhoneTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/surfaceTitleTextView"/>
+
+
+        <TextView
+            android:id="@+id/surfaceTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="20dp"
+            android:text="Surface"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/iconRoomView"
+            app:layout_constraintStart_toEndOf="@id/iconView"
+            app:layout_constraintTop_toBottomOf="@id/typeDetailPhoneTextView" />
+
+        <ImageView
+            android:id="@+id/iconRoomView"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/baseline_home_24"
+            app:layout_constraintTop_toBottomOf="@+id/typeDetailPhoneTextView"
+            app:layout_constraintStart_toEndOf="@id/surfaceTitleTextView"/>
+
+        <TextView
+            android:id="@+id/roomsTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="20dp"
+            android:text="Rooms"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/iconRoomView"
+            app:layout_constraintTop_toBottomOf="@id/typeDetailPhoneTextView" />
+
+        <ImageView
+            android:id="@+id/iconDateOfEntryView"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:src="@drawable/baseline_calendar_month_24"
+            app:layout_constraintTop_toBottomOf="@+id/typeDetailPhoneTextView"
+            app:layout_constraintStart_toEndOf="@id/roomsTitleTextView"/>
+
+        <TextView
+            android:id="@+id/dateOfEntryTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="20dp"
+            android:text="Date of entry"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/iconDateOfEntryView"
+            app:layout_constraintTop_toBottomOf="@id/typeDetailPhoneTextView" />
+
+
+
+        <TextView
+            android:id="@+id/surfaceDetailPhoneTextView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="55dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="1000"
+            app:layout_constraintTop_toBottomOf="@id/surfaceTitleTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread" />
+
+        <TextView
+            android:id="@+id/roomsDetailPhoneTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="80dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="8"
+            app:layout_constraintTop_toBottomOf="@id/surfaceTitleTextView"
+            app:layout_constraintStart_toEndOf="@id/surfaceDetailPhoneTextView" />
+
+        <TextView
+            android:id="@+id/dateOfEntryDetailPhoneTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="85dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="01/01/2021"
+            app:layout_constraintTop_toBottomOf="@id/surfaceTitleTextView"
+            app:layout_constraintStart_toEndOf="@id/roomsDetailPhoneTextView" />
+
+        <ImageView
+            android:id="@+id/iconNearbyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/baseline_nearby"
+            app:layout_constraintTop_toBottomOf="@id/surfaceDetailPhoneTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/nearbyTitleDetailPhoneTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_marginStart="-10dp"
+            android:textSize="16sp"
+            android:text="Nearby"
+            app:layout_constraintTop_toBottomOf="@id/surfaceDetailPhoneTextView"
+            app:layout_constraintStart_toEndOf="@id/iconNearbyView"
+            app:layout_constraintHorizontal_chainStyle="spread" />
+
+
+
+        <TextView
+            android:id="@+id/nearbyDetailPhoneTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="60dp"
+            android:text="Parc, school"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintTop_toBottomOf="@id/nearbyTitleDetailPhoneTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+
+        <TextView
+            android:id="@+id/descriptionTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="Description"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nearbyDetailPhoneTextView" />
+
+        <FrameLayout
+            android:id="@+id/mapContainer"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descriptionTitleTextView"
+            app:layout_constraintVertical_bias="0.304">
+
+            <!-- Include your Map fragment or view here -->
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+
