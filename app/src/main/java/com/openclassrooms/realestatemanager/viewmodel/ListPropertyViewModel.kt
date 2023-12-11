@@ -6,8 +6,8 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.models.PropertyModels
 import com.openclassrooms.realestatemanager.data.repository.PropertyRepository
-import com.openclassrooms.realestatemanager.useCase.AddPropertyUseCase
-import com.openclassrooms.realestatemanager.useCase.GetAllPropertiesWithMainPictureUseCase
+import com.openclassrooms.realestatemanager.view.useCase.AddPropertyUseCase
+import com.openclassrooms.realestatemanager.view.useCase.GetAllPropertiesWithMainPictureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

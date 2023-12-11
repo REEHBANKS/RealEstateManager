@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.useCase
+package com.openclassrooms.realestatemanager.view.useCase
 
 import com.openclassrooms.realestatemanager.data.models.PropertyWithMainPicture
 import com.openclassrooms.realestatemanager.data.repository.PictureRepository
