@@ -19,7 +19,10 @@ import java.text.NumberFormat
 import java.util.Locale
 
 
-class PropertyAdapter(private val context: Context) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
+class PropertyAdapter(
+    private val context: Context,
+    private val onItemClicked: (PropertyWithMainPicture) -> Unit
+) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
 
     private var properties: List<PropertyWithMainPicture> = listOf()
 
@@ -46,6 +49,10 @@ class PropertyAdapter(private val context: Context) : RecyclerView.Adapter<Prope
         val priceText = format.format(property.property.price)
         holder.binding.textViewPropertyPrice.text = priceText
 
+        holder.itemView.setOnClickListener {
+            onItemClicked(property)
+        }
+
         // Check if there is an image URL available for the property
         if (property.mainPicture?.uri.isNullOrEmpty()) {
             // No image URL is available, so set a default image
@@ -57,6 +64,8 @@ class PropertyAdapter(private val context: Context) : RecyclerView.Adapter<Prope
                 .load(property.mainPicture?.uri)
                 .into(holder.binding.imageViewProperty)
         }
+
+
 
 
 

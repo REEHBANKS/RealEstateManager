@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.view.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstatePropertyBinding
+import com.openclassrooms.realestatemanager.view.activity.DetailActivity
 import com.openclassrooms.realestatemanager.view.adapter.PropertyAdapter
 import com.openclassrooms.realestatemanager.viewmodel.ListPropertyViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +31,14 @@ class ListPropertyFragment : Fragment() {
         viewModel.maybeAddFakeProperties()
 
 
-        val adaptor = PropertyAdapter(requireContext())
+        val adaptor = PropertyAdapter(requireContext()) { property ->
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("EXTRA_PRICE", property.property.price)
+            intent.putExtra("EXTRA_TYPE", property.property.type)
+            intent.putExtra("EXTRA_AREA", property.property.area)
+            intent.putExtra("EXTRA_LOCATION", property.property.address)
+            startActivity(intent)
+        }
         binding.propertiesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adaptor

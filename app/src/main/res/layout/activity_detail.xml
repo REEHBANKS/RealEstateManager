@@ -269,7 +269,7 @@
             android:layout_height="80dp"
             android:src="@drawable/profil_pele"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="40dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"
             android:layout_marginEnd="8dp"
@@ -281,7 +281,7 @@
             android:layout_height="wrap_content"
             android:text="Pelé"
             android:textSize="16sp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="30dp"
             android:textStyle="bold"
             android:textColor="@color/colorBlack"
             android:gravity="center"
@@ -295,7 +295,7 @@
             android:id="@+id/iconAgentView"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="30dp"
             android:layout_marginBottom="3dp"
             android:src="@drawable/baseline_person_refer"
             app:layout_constraintBottom_toTopOf="@id/agentImageView"
@@ -307,7 +307,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="30dp"
             android:gravity="center"
             android:text="Agent refer"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -319,11 +319,21 @@
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="2dp"
+            android:layout_marginStart="30dp"
             android:src="@drawable/baseline_phone_24"
             android:background="@android:color/transparent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/agentImageView"/>
+
+        <ImageView
+            android:id="@+id/iconMailView"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/baseline_email_24"
+            app:layout_constraintTop_toBottomOf="@id/agentImageView"
+            app:layout_constraintStart_toEndOf="@id/iconPhoneView"/>
 
         <FrameLayout
             android:id="@+id/mapContainer"
@@ -339,7 +349,7 @@
             app:layout_constraintStart_toStartOf="parent"
 
             app:layout_constraintTop_toBottomOf="@id/locationDetailPhoneTextView"
-            app:layout_constraintVertical_bias="0.4">
+            app:layout_constraintVertical_bias="0.0">
 
             <!-- Include your Map fragment or view here -->
 
