@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="price_format">%d$</string>
+    <string name="area_format">%d m²</string>
+    <string name="rooms_format">%d rooms</string>
 </resources>
