@@ -16,6 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:src="@drawable/picture_intro"
+            android:background="@drawable/textview_border"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -161,9 +162,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="25dp"
             android:src="@drawable/baseline_nearby"
-            app:layout_constraintTop_toBottomOf="@id/surfaceDetailPhoneTextView"
+            app:layout_constraintTop_toBottomOf="@id/descriptionDetailPhoneTextView"
             app:layout_constraintStart_toStartOf="parent"
             />
 
@@ -175,7 +176,7 @@
             android:layout_marginStart="-10dp"
             android:textSize="16sp"
             android:text="Nearby"
-            app:layout_constraintTop_toBottomOf="@id/surfaceDetailPhoneTextView"
+            app:layout_constraintTop_toBottomOf="@id/descriptionDetailPhoneTextView"
             app:layout_constraintStart_toEndOf="@id/iconNearbyView"
             app:layout_constraintHorizontal_chainStyle="spread" />
 
@@ -183,16 +184,16 @@
 
         <TextView
             android:id="@+id/nearbyDetailPhoneTextView"
-            android:layout_width="0dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="25dp"
             android:text="Parc, school"
             android:textSize="16sp"
             android:textColor="@color/colorBlack"
             app:layout_constraintTop_toBottomOf="@id/nearbyTitleDetailPhoneTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+             />
 
 
 
@@ -202,24 +203,143 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="150dp"
             android:textSize="18sp"
             android:textStyle="bold"
             android:text="Description"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/nearbyDetailPhoneTextView" />
+            app:layout_constraintTop_toBottomOf="@id/surfaceDetailPhoneTextView" />
+
+        <TextView
+            android:id="@+id/descriptionDetailPhoneTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginEnd="23dp"
+            android:textSize="14sp"
+            android:textColor="@color/colorBlack"
+            android:text="la vue est belle!"
+            android:background="@drawable/textview_border"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/descriptionTitleTextView" />
+
+        <ImageView
+            android:id="@+id/iconLocationView"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_marginStart="140dp"
+            android:src="@drawable/baseline_location_on_24"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionDetailPhoneTextView"
+            app:layout_constraintStart_toEndOf="@id/nearbyTitleDetailPhoneTextView"/>
+
+        <TextView
+            android:id="@+id/locationTitleDetailPhoneTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_marginStart="3dp"
+            android:textSize="16sp"
+            android:text="Location"
+            app:layout_constraintTop_toBottomOf="@id/descriptionDetailPhoneTextView"
+            app:layout_constraintStart_toEndOf="@id/iconLocationView"
+            app:layout_constraintHorizontal_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/locationDetailPhoneTextView"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="8dp"
+            android:text="10 rue de l'université Paris 7"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:gravity="center"
+            app:layout_constraintStart_toEndOf="@id/nearbyTitleDetailPhoneTextView"
+            app:layout_constraintTop_toBottomOf="@id/locationTitleDetailPhoneTextView" />
+
+        <ImageView
+            android:id="@+id/agentImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/profil_pele"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"
+            android:layout_marginEnd="8dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/agentNameTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Pelé"
+            android:textSize="16sp"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/agentImageView"
+             />
+
+
+        <ImageView
+            android:id="@+id/iconAgentView"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="3dp"
+            android:src="@drawable/baseline_person_refer"
+            app:layout_constraintBottom_toTopOf="@id/agentImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/agentInfoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Agent refer"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintStart_toEndOf="@id/iconAgentView"
+            app:layout_constraintBottom_toTopOf="@id/agentImageView"  />
+
+        <ImageButton
+            android:id="@+id/iconPhoneView"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="2dp"
+            android:src="@drawable/baseline_phone_24"
+            android:background="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/agentImageView"/>
 
         <FrameLayout
             android:id="@+id/mapContainer"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="4dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="195dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/textview_border"
+            app:layout_constraintHorizontal_bias="0.812"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/descriptionTitleTextView"
-            app:layout_constraintVertical_bias="0.304">
+
+            app:layout_constraintTop_toBottomOf="@id/locationDetailPhoneTextView"
+            app:layout_constraintVertical_bias="0.0">
 
             <!-- Include your Map fragment or view here -->
 
