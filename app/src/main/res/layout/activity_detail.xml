@@ -8,14 +8,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/galleryViewPager"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:src="@drawable/picture_intro"
+            android:scaleType="centerCrop"
             android:background="@drawable/textview_border"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,6 @@
             android:textSize="30sp"
             android:textStyle="bold"
             android:textColor="@color/colorBlack"
-            android:text="500000€"
             app:layout_constraintTop_toBottomOf="@id/galleryViewPager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed" />
@@ -45,7 +44,6 @@
             android:layout_marginStart="10dp"
             android:textSize="20sp"
             android:textColor="@color/colorBlack"
-            android:text="Maison"
             app:layout_constraintTop_toBottomOf="@id/priceTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread" />
@@ -128,7 +126,6 @@
             android:layout_marginStart="55dp"
             android:textSize="16sp"
             android:textColor="@color/colorBlack"
-            android:text="1000"
             app:layout_constraintTop_toBottomOf="@id/surfaceTitleTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread" />
@@ -141,7 +138,6 @@
             android:layout_marginStart="80dp"
             android:textSize="16sp"
             android:textColor="@color/colorBlack"
-            android:text="8"
             app:layout_constraintTop_toBottomOf="@id/surfaceTitleTextView"
             app:layout_constraintStart_toEndOf="@id/surfaceDetailPhoneTextView" />
 
@@ -153,7 +149,7 @@
             android:layout_marginStart="85dp"
             android:textSize="16sp"
             android:textColor="@color/colorBlack"
-            android:text="01/01/2021"
+
             app:layout_constraintTop_toBottomOf="@id/surfaceTitleTextView"
             app:layout_constraintStart_toEndOf="@id/roomsDetailPhoneTextView" />
 
@@ -188,7 +184,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="25dp"
-            android:text="Parc, school"
             android:textSize="16sp"
             android:textColor="@color/colorBlack"
             app:layout_constraintTop_toBottomOf="@id/nearbyTitleDetailPhoneTextView"
@@ -220,7 +215,6 @@
             android:layout_marginEnd="23dp"
             android:textSize="14sp"
             android:textColor="@color/colorBlack"
-            android:text="la vue est belle!"
             android:background="@drawable/textview_border"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -256,38 +250,27 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="110dp"
             android:layout_marginTop="8dp"
-            android:text="10 rue de l'université Paris 7"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             android:gravity="center"
             app:layout_constraintStart_toEndOf="@id/nearbyTitleDetailPhoneTextView"
             app:layout_constraintTop_toBottomOf="@id/locationTitleDetailPhoneTextView" />
 
-        <ImageView
-            android:id="@+id/agentImageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/profil_pele"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="40dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"
-            android:layout_marginEnd="8dp"
-            android:scaleType="centerCrop" />
+
 
         <TextView
             android:id="@+id/agentNameTextView"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Pelé"
             android:textSize="16sp"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="10dp"
             android:textStyle="bold"
             android:textColor="@color/colorBlack"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/agentImageView"
+            app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"
              />
 
 
@@ -296,9 +279,9 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginStart="30dp"
-            android:layout_marginBottom="3dp"
+            android:layout_marginTop="60dp"
             android:src="@drawable/baseline_person_refer"
-            app:layout_constraintBottom_toTopOf="@id/agentImageView"
+            app:layout_constraintTop_toBottomOf="@+id/nearbyDetailPhoneTextView"
             app:layout_constraintStart_toStartOf="parent"
             />
 
@@ -307,32 +290,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="70dp"
             android:gravity="center"
             android:text="Agent refer"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintStart_toEndOf="@id/iconAgentView"
-            app:layout_constraintBottom_toTopOf="@id/agentImageView"  />
+            app:layout_constraintTop_toBottomOf="@+id/nearbyDetailPhoneTextView" />
 
         <ImageButton
             android:id="@+id/iconPhoneView"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"
             android:src="@drawable/baseline_phone_24"
             android:background="@android:color/transparent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/agentImageView"/>
+
+            app:layout_constraintStart_toEndOf="@+id/agentNameTextView"
+            app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"/>
 
         <ImageView
             android:id="@+id/iconMailView"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"
             android:src="@drawable/baseline_email_24"
-            app:layout_constraintTop_toBottomOf="@id/agentImageView"
+            app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"
             app:layout_constraintStart_toEndOf="@id/iconPhoneView"/>
 
         <FrameLayout
