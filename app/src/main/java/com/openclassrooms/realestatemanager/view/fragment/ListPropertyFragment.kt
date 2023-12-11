@@ -37,6 +37,9 @@ class ListPropertyFragment : Fragment() {
             intent.putExtra("EXTRA_TYPE", property.property.type)
             intent.putExtra("EXTRA_AREA", property.property.area)
             intent.putExtra("EXTRA_LOCATION", property.property.address)
+            intent.putExtra("EXTRA_NEARBY", property.property.neighborhood)
+            intent.putExtra("EXTRA_ROOMS", property.property.numberOfRooms)
+            intent.putExtra("EXTRA_DESCRIPTION", property.property.fullDescription)
             startActivity(intent)
         }
         binding.propertiesRecyclerView.apply {
