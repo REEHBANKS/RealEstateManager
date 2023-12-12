@@ -41,8 +41,8 @@ class ListPropertyFragment : Fragment() {
             intent.putExtra("EXTRA_ROOMS", property.property.numberOfRooms)
             intent.putExtra("EXTRA_DESCRIPTION", property.property.fullDescription)
             intent.putExtra("EXTRA_IS_SOLD", property.property.status)
-            intent.putExtra("EXTRA_ENTRY_DATE", property.property.marketEntryDate)
-            intent.putExtra("EXTRA_SOLD_DATE", property.property.saleDate)
+            intent.putExtra("EXTRA_ENTRY_DATE", property.property.marketEntryDate.time)
+            property.property.saleDate?.let { intent.putExtra("EXTRA_SOLD_DATE", it.time) }
             startActivity(intent)
         }
         binding.propertiesRecyclerView.apply {

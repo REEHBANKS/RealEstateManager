@@ -1,19 +1,23 @@
 package com.openclassrooms.realestatemanager.view.activity
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.openclassrooms.realestatemanager.R
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        // Récupérer les données passées dans l'intent
+        // Retrieve data passed in the intent
         val price = intent.getIntExtra("EXTRA_PRICE", 0)
         val type = intent.getStringExtra("EXTRA_TYPE") ?: ""
         val area = intent.getIntExtra("EXTRA_AREA", 0)
@@ -22,41 +26,56 @@ class DetailActivity : AppCompatActivity() {
         val rooms = intent.getIntExtra("EXTRA_ROOMS", 0)
         val description = intent.getStringExtra("EXTRA_DESCRIPTION") ?: ""
         val isSold = intent.getBooleanExtra("EXTRA_IS_SOLD", false)
-        val soldDate = intent.getStringExtra("EXTRA_SOLD_DATE") ?: ""
+        val entryTimestamp = intent.getLongExtra("EXTRA_ENTRY_DATE", -1L)
+        val soldTimestamp = intent.getLongExtra("EXTRA_SOLD_DATE", -1L)
 
-        // Utiliser les données pour configurer les TextViews
+        // Use the data to configure TextViews
         findViewById<TextView>(R.id.priceTextView).text = getString(R.string.price_format, price)
         findViewById<TextView>(R.id.typeDetailPhoneTextView).text = type
-        findViewById<TextView>(R.id.surfaceDetailPhoneTextView).text = getString( area)
+        findViewById<TextView>(R.id.surfaceDetailPhoneTextView).text = area.toString()
         findViewById<TextView>(R.id.locationDetailPhoneTextView).text = location
         findViewById<TextView>(R.id.nearbyDetailPhoneTextView).text = nearby
-        findViewById<TextView>(R.id.roomsDetailPhoneTextView).text = getString( rooms)
+        findViewById<TextView>(R.id.roomsDetailPhoneTextView).text = rooms.toString()
         findViewById<TextView>(R.id.descriptionDetailPhoneTextView).text = description
         val stateButton = findViewById<Button>(R.id.button_state)
+        val dateEntryTextView = findViewById<TextView>(R.id.dateOfEntryDetailPhoneTextView)
         val dateSoldTextView = findViewById<TextView>(R.id.dateOfSoldDetailPhoneTextView)
 
-        // Ajoutez d'autres configurations si nécessaire
 
+        // Format the date of entry and display it
+        val dateEntryFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-        // Mettez à jour l'état du bouton et la date de vente en fonction de si la propriété est vendue
-        if (isSold) {
+        if (entryTimestamp > 0) {
+            val dateEntry = Date(entryTimestamp)
+            val formattedEntryDate = dateEntryFormat.format(dateEntry)
+            dateEntryTextView.text = formattedEntryDate
+        } else {
+            dateEntryTextView.text = "Entry date not available"
+        }
 
+        if (!isSold) {
+            // Set state button as "SOLD" and update its background
             stateButton.apply {
                 text = "SOLD"
                 background = ContextCompat.getDrawable(this@DetailActivity, R.drawable.button_sold)
             }
-            dateSoldTextView.text = soldDate
-        } else {
 
+            // Format and display the sold date
+            if (soldTimestamp > 0) { // Ensure the timestamp is valid
+                val date = Date(soldTimestamp)
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val formattedDate = dateFormat.format(date)
+                dateSoldTextView.text = formattedDate
+            } else {
+                dateSoldTextView.text = "Sold date not available"
+            }
+        } else {
+            // Set state button as "FOR SALE" and update its background
             stateButton.apply {
                 text = "FOR SALE"
                 background = ContextCompat.getDrawable(this@DetailActivity, R.drawable.button_for_sale)
             }
             dateSoldTextView.text = ""
         }
-
-
-
-
     }
 }
