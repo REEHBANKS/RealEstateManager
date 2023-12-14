@@ -10,16 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/galleryViewPager"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/photosRecyclerView"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:src="@drawable/picture_intro"
-            android:scaleType="centerCrop"
             android:background="@drawable/textview_border"
+            tools:listitem="@layout/photo_item"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
 
         <TextView
             android:id="@+id/priceTextView"
@@ -30,7 +30,7 @@
             android:textSize="30sp"
             android:textStyle="bold"
             android:textColor="@color/colorBlack"
-            app:layout_constraintTop_toBottomOf="@id/galleryViewPager"
+            app:layout_constraintTop_toBottomOf="@id/photosRecyclerView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed" />
 
@@ -60,7 +60,7 @@
             android:enabled="false"
             android:clickable="false"
             android:focusable="false"
-            app:layout_constraintTop_toBottomOf="@id/galleryViewPager"
+            app:layout_constraintTop_toBottomOf="@id/photosRecyclerView"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
@@ -348,9 +348,8 @@
 
         <ImageView
             android:id="@+id/mapContainer"
-            android:layout_width="0dp"
-            android:layout_height="180dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginStart="195dp"

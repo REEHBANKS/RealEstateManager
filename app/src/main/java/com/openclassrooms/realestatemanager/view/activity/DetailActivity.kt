@@ -54,7 +54,7 @@ class DetailActivity : AppCompatActivity() {
 
         // Construction de l'URL pour Google Maps Static API
         val staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" +
-                "$latitude,$longitude&zoom=16&size=600x300&markers=color:red%7C$latitude,$longitude&key=$apiKey"
+                "$latitude,$longitude&zoom=18&size=600x600&markers=color:red%7C$latitude,$longitude&key=$apiKey"
 
         Glide.with(this)
             .load(staticMapUrl)
