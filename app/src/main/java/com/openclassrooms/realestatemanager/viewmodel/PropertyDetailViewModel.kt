@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,13 +12,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PropertyDetailViewModel @Inject constructor(private val getPicturesForPropertyUseCase: GetPicturesForPropertyUseCase) : ViewModel() {
-    private val picturesLiveData: MutableLiveData<List<PhotoDescription>> = MutableLiveData()
+class PropertyDetailViewModel @Inject constructor(
+    private val getPicturesForPropertyUseCase: GetPicturesForPropertyUseCase
+) : ViewModel() {
+
+    private val _picturesLiveData = MutableLiveData<List<PhotoDescription>>()
+    val picturesLiveData: LiveData<List<PhotoDescription>> = _picturesLiveData
 
     fun getPicturesForProperty(propertyId: String) {
         viewModelScope.launch {
             val pictures = getPicturesForPropertyUseCase.execute(propertyId)
-            picturesLiveData.postValue(pictures)
+            _picturesLiveData.postValue(pictures)
 
             // Loguer les identifiants des photos pour vérification
             pictures.forEach { picture ->
@@ -26,3 +31,4 @@ class PropertyDetailViewModel @Inject constructor(private val getPicturesForProp
         }
     }
 }
+

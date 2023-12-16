@@ -8,23 +8,35 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
+import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstatePropertyBinding
+import com.openclassrooms.realestatemanager.view.adapter.PropertyImagesAdapter
 import com.openclassrooms.realestatemanager.viewmodel.PropertyDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.ParseException
+
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
 @AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDetailBinding
     private val viewModel: PropertyDetailViewModel by viewModels()
+    private lateinit var imagesAdapter: PropertyImagesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+        binding = ActivityDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setupRecyclerView()
+        observeViewModel()
 
         val apiKey = BuildConfig.API_KEY
 
@@ -106,4 +118,20 @@ class DetailActivity : AppCompatActivity() {
             dateSoldTextView.text = ""
         }
     }
+
+    private fun setupRecyclerView() {
+        imagesAdapter = PropertyImagesAdapter(this)
+        binding.photosRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = imagesAdapter
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.picturesLiveData.observe(this) { pictures ->
+            imagesAdapter.submitList(pictures)
+        }
+    }
+
+
 }
