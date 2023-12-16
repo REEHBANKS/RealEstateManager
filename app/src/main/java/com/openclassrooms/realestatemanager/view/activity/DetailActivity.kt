@@ -49,7 +49,8 @@ class DetailActivity : AppCompatActivity() {
         val type = intent.getStringExtra("EXTRA_TYPE") ?: ""
         val area = intent.getIntExtra("EXTRA_AREA", 0)
         val location = intent.getStringExtra("EXTRA_LOCATION") ?: ""
-        val nearby = intent.getStringExtra("EXTRA_NEARBY") ?: ""
+        val nearbyList = intent.getStringArrayListExtra("EXTRA_NEARBY") ?: arrayListOf()
+        val nearbyText = nearbyList.joinToString(separator = ", ")
         val rooms = intent.getIntExtra("EXTRA_ROOMS", 0)
         val description = intent.getStringExtra("EXTRA_DESCRIPTION") ?: ""
         val isSold = intent.getBooleanExtra("EXTRA_IS_SOLD", false)
@@ -63,7 +64,7 @@ class DetailActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.typeDetailPhoneTextView).text = type
         findViewById<TextView>(R.id.surfaceDetailPhoneTextView).text = area.toString()
         findViewById<TextView>(R.id.locationDetailPhoneTextView).text = location
-        findViewById<TextView>(R.id.nearbyDetailPhoneTextView).text = nearby
+        findViewById<TextView>(R.id.nearbyDetailPhoneTextView).text = nearbyText
         findViewById<TextView>(R.id.roomsDetailPhoneTextView).text = rooms.toString()
         findViewById<TextView>(R.id.descriptionDetailPhoneTextView).text = description
         val stateButton = findViewById<Button>(R.id.button_state)
