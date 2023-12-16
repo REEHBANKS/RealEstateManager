@@ -6,15 +6,21 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.viewmodel.PropertyDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+@AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
+    private val viewModel: PropertyDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +32,7 @@ class DetailActivity : AppCompatActivity() {
 
 
         // Retrieve data passed in the intent
+        val id = intent.getStringExtra("EXTRA_ID") ?: ""
         val price = intent.getIntExtra("EXTRA_PRICE", 0)
         val type = intent.getStringExtra("EXTRA_TYPE") ?: ""
         val area = intent.getIntExtra("EXTRA_AREA", 0)
@@ -52,7 +59,7 @@ class DetailActivity : AppCompatActivity() {
         val dateSoldTextView = findViewById<TextView>(R.id.dateOfSoldDetailPhoneTextView)
         val mapImageView = findViewById<ImageView>(R.id.mapContainer)
 
-        // Construction de l'URL pour Google Maps Static API
+        // Build URL  Google Maps Static API
         val staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" +
                 "$latitude,$longitude&zoom=18&size=600x600&markers=color:red%7C$latitude,$longitude&key=$apiKey"
 
@@ -60,7 +67,8 @@ class DetailActivity : AppCompatActivity() {
             .load(staticMapUrl)
             .into(mapImageView)
 
-
+        // Get Gallery picture
+        viewModel.getPicturesForProperty(id)
 
         // Format the date of entry and display it
         val dateEntryFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

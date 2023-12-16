@@ -65,10 +65,6 @@ class PropertyAdapter(
                 .into(holder.binding.imageViewProperty)
         }
 
-
-
-
-
     }
 
     override fun getItemCount() = properties.size

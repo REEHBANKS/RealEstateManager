@@ -7,6 +7,7 @@ import com.openclassrooms.realestatemanager.view.useCase.AddAgentUseCase
 import com.openclassrooms.realestatemanager.view.useCase.AddPropertyUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetAgentByIdUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetAllPropertiesWithMainPictureUseCase
+import com.openclassrooms.realestatemanager.view.useCase.GetPicturesForPropertyUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetPropertyDetailsWithPictures
 import com.openclassrooms.realestatemanager.view.useCase.UpdatePropertyUseCase
 import dagger.Module
@@ -24,6 +25,13 @@ object AppModule {
         pictureRepository: PictureRepository
     ): GetAllPropertiesWithMainPictureUseCase {
         return GetAllPropertiesWithMainPictureUseCase(propertyRepository, pictureRepository)
+    }
+
+    @Provides
+    fun provideGetPicturesForPropertyUseCase(
+        pictureRepository: PictureRepository):
+            GetPicturesForPropertyUseCase{
+        return GetPicturesForPropertyUseCase(pictureRepository)
     }
 
     @Provides
