@@ -2,19 +2,16 @@ package com.openclassrooms.realestatemanager.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
-import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstatePropertyBinding
 import com.openclassrooms.realestatemanager.view.adapter.PropertyImagesAdapter
 import com.openclassrooms.realestatemanager.viewmodel.PropertyDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +33,8 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecyclerView()
-        observeViewModel()
+        observePicturesViewModel()
+        observeAgentViewModel()
 
         val apiKey = BuildConfig.API_KEY
 
@@ -45,6 +43,7 @@ class DetailActivity : AppCompatActivity() {
 
         // Retrieve data passed in the intent
         val id = intent.getStringExtra("EXTRA_ID") ?: ""
+        val agentId = intent.getStringExtra("EXTRA_AGENT_ID") ?: ""
         val price = intent.getIntExtra("EXTRA_PRICE", 0)
         val type = intent.getStringExtra("EXTRA_TYPE") ?: ""
         val area = intent.getIntExtra("EXTRA_AREA", 0)
@@ -82,6 +81,9 @@ class DetailActivity : AppCompatActivity() {
 
         // Get Gallery picture
         viewModel.getPicturesForProperty(id)
+
+        // Get Agent
+        viewModel.getOneAgentWithId(agentId)
 
         // Format the date of entry and display it
         val dateEntryFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -128,9 +130,18 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeViewModel() {
+    private fun observePicturesViewModel() {
         viewModel.picturesLiveData.observe(this) { pictures ->
             imagesAdapter.submitList(pictures)
+        }
+    }
+
+    private fun observeAgentViewModel(){
+        viewModel.agentLiveData.observe(this) {agent ->
+            if (agent != null) {
+                findViewById<TextView>(R.id.agentNameTextView).text = agent.agentName
+            }
+
         }
     }
 

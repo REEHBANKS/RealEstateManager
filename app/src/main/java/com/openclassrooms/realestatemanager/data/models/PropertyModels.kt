@@ -17,7 +17,7 @@ data class PropertyModels(
     var status: Boolean = true, // true for available, false for sold
     val marketEntryDate: Date = Date(),
     var saleDate: Date? = null, // nullable, only if sold
-    val agentId: Int = 0,
+    val agentId: String = "",
     var latitude: Double = 0.0,
     var longitude: Double = 0.0
 )

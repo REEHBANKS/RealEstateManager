@@ -65,7 +65,7 @@ class ListPropertyViewModel @Inject constructor(
             status = true, // Disponible
             marketEntryDate = Date(),
             saleDate = null,
-            agentId = 3,
+            agentId = "45fff",
             latitude = 48.8566,
             longitude = 2.350987
         ),
@@ -83,7 +83,7 @@ class ListPropertyViewModel @Inject constructor(
             status = false, // Vendu
             marketEntryDate = Date(),
             saleDate = null,
-            agentId = 4,
+            agentId = "45dddd",
             latitude = 48.865938,
             longitude = 2.303718
         ),
@@ -101,7 +101,7 @@ class ListPropertyViewModel @Inject constructor(
             status = true, // Disponible
             marketEntryDate = Date(),
             saleDate = null,
-            agentId = 5,
+            agentId = "5dc555",
             latitude = 48.8602,
             longitude = 2.3284
         )

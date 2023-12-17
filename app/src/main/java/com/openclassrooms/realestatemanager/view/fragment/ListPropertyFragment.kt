@@ -34,6 +34,7 @@ class ListPropertyFragment : Fragment() {
         val adaptor = PropertyAdapter(requireContext()) { property ->
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra("EXTRA_ID", property.property.id)
+            intent.putExtra("EXTRA_AGENT_ID", property.property.agentId)
             intent.putExtra("EXTRA_PRICE", property.property.price)
             intent.putExtra("EXTRA_TYPE", property.property.type)
             intent.putExtra("EXTRA_AREA", property.property.area)
