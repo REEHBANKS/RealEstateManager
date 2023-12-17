@@ -20,7 +20,11 @@ class ListPropertyFragment : Fragment() {
     private lateinit var binding: FragmentListRealEstatePropertyBinding
     private val viewModel: ListPropertyViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentListRealEstatePropertyBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,7 +43,10 @@ class ListPropertyFragment : Fragment() {
             intent.putExtra("EXTRA_TYPE", property.property.type)
             intent.putExtra("EXTRA_AREA", property.property.area)
             intent.putExtra("EXTRA_LOCATION", property.property.address)
-            intent.putStringArrayListExtra("EXTRA_NEARBY", ArrayList(property.property.nearbyPointsOfInterest))
+            intent.putStringArrayListExtra(
+                "EXTRA_NEARBY",
+                ArrayList(property.property.nearbyPointsOfInterest)
+            )
             intent.putExtra("EXTRA_ROOMS", property.property.numberOfRooms)
             intent.putExtra("EXTRA_DESCRIPTION", property.property.fullDescription)
             intent.putExtra("EXTRA_IS_SOLD", property.property.status)

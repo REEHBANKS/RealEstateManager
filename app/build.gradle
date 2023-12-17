@@ -9,13 +9,15 @@ android {
     compileSdk 34
     defaultConfig {
         applicationId "com.openclassrooms.realestatemanager"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
-        buildConfigField 'String', 'API_KEY', "\"${RR_KEY}\""
+
+        buildConfigField 'String', 'API_KEY', RR_KEY
+        manifestPlaceholders = [RR_KEY: RR_KEY]
     }
     buildTypes {
         release {
@@ -78,7 +80,14 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
-    // MAP GOOGLE
+    // MAP
+    implementation 'com.google.maps.android:android-maps-utils:0.6.2'
+    implementation "com.google.android.gms:play-services-maps:18.2.0"
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.android.volley:volley:1.2.1'
+
+    //Place API
+    implementation 'com.google.android.libraries.places:places:3.3.0'
 
 
 

@@ -86,23 +86,5 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    /*   fun tryToShowDetailFragment(propertyName: String) {
-           // Vérifiez si le conteneur de détails existe (pour s'assurer que c'est une tablette)
-           if (findViewById<View>(R.id.detail_container) != null) {
-               showDetailFragment(propertyName)
-           }
-       }
-   */
-
-
-    // Dans MainActivity.kt
-    fun showDetailFragment(detailString: String) {
-        val detailFragment = DetailFragment.newInstance(detailString)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.detail_container, detailFragment)
-            .commit()
-    }
-
-
 
 }
