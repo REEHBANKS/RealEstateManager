@@ -1,26 +1,34 @@
 package com.openclassrooms.realestatemanager.data.repository
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
-import com.openclassrooms.realestatemanager.data.models.AgentModels
+import com.openclassrooms.realestatemanager.data.models.AgentModel
 import kotlinx.coroutines.tasks.await
 
 class AgentRepository(private val firestore: FirebaseFirestore) {
 
-    suspend fun addAgent(agent: AgentModels): Boolean {
-        return try {
-            val newAgentRef = firestore.collection("agents").document()
-            val newAgentId = newAgentRef.id
-            val newAgent = agent.copy(agentId = newAgentId)
-            newAgentRef.set(newAgent).await()
-            true
-        } catch (e: Exception) {
-            false
+    fun createUser() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        currentUser?.let { user ->
+            val uid = user.uid
+            FirebaseFirestore.getInstance().collection("agents").document(uid).get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (!documentSnapshot.exists()) {
+                        val username = user.displayName ?: ""
+                        val userEmail = user.email ?: ""
+                        val agentToCreate = AgentModel(uid, userEmail, username)
+                        FirebaseFirestore.getInstance().collection("agents").document(uid).set(agentToCreate)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    // Error handling for agent creation failure.
+                }
         }
     }
 
-    suspend fun getAgentById(agentId: String): AgentModels? {
+    suspend fun getAgentById(agentId: String): AgentModel? {
         val documentSnapshot = firestore.collection("agents").document(agentId).get().await()
-        return documentSnapshot.toObject<AgentModels>()
+        return documentSnapshot.toObject<AgentModel>()
     }
 }

@@ -7,6 +7,7 @@ import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
@@ -14,8 +15,13 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.viewmodel.AgentViewModel
+import com.openclassrooms.realestatemanager.viewmodel.PropertyDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ConnexionActivity : AppCompatActivity() {
+    private val viewModel: AgentViewModel by viewModels()
 
     private val RC_SIGN_IN = 123
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +93,7 @@ class ConnexionActivity : AppCompatActivity() {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 //userViewModel.createUser() // Assurez-vous que cette méthode est définie dans votre ViewModel
+                viewModel.createUser()
                 showSnackBar(getString(R.string.connection_succeed))
                 startMainActivity()
             } else {

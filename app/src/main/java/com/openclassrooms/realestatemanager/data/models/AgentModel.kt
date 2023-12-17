@@ -1,7 +1,7 @@
 package com.openclassrooms.realestatemanager.data.models
 
-data class AgentModels(
+data class AgentModel(
     var agentId: String,
-    val agentLMail: String,
+    val agentMail: String,
     val agentName: String
 )
