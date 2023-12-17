@@ -55,6 +55,11 @@ dependencies {
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:28.0.1')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+    implementation 'com.google.firebase:firebase-core:21.1.1'
+    implementation 'com.google.firebase:firebase-firestore'
+
 
     //Couritine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'

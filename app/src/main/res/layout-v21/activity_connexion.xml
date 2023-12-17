@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_background">
+
+
+    <Button
+        android:id="@+id/buttonSignIn"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp"
+        android:alpha="0.8"
+        android:background="@drawable/button_gradient"
+        android:fontFamily="@font/playfair_display"
+        android:text="@string/log_in"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/buttonSignUp"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:background="@drawable/button_neutral"
+        android:layout_below="@id/buttonSignIn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-120dp"
+        android:alpha="0.8"
+        android:fontFamily="@font/playfair_display"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/textViewForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forgot_password"
+        android:textSize="16sp"
+        android:fontFamily="@font/playfair_display_italic"
+        android:textColor="@color/white"
+    android:layout_below="@id/buttonSignIn"
+    android:layout_marginStart="240dp"
+    android:layout_marginTop="-40dp" />
+
+
+
+
+</RelativeLayout>
