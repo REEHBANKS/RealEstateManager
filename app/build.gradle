@@ -4,6 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'kotlin-kapt'
 
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -11,7 +12,6 @@ if (localPropertiesFile.exists()) {
 }
 
 def key = localProperties['RR_KEY'] ?: "DefaultAPIKey"
-
 
 android {
     compileSdk 34
@@ -24,7 +24,7 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
 
-        buildConfigField 'String', 'RR_KEY', "\"${key}\""
+        buildConfigField 'String', 'API_KEY', "\"${key}\""
         manifestPlaceholders = [RR_KEY: key]
     }
     buildTypes {

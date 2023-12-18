@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.view.fragment
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -27,12 +29,17 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.models.PropertyModels
+import com.openclassrooms.realestatemanager.data.models.PropertyWithMainPicture
 import com.openclassrooms.realestatemanager.databinding.FragmentMapRealEstatePropertyBinding
+import com.openclassrooms.realestatemanager.view.activity.DetailActivity
+import com.openclassrooms.realestatemanager.viewmodel.MapPropertyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class MapPropertyFragment : Fragment(), OnMapReadyCallback {
+    private val viewModel: MapPropertyViewModel by viewModels()
     private var _binding: FragmentMapRealEstatePropertyBinding? = null
     private val binding get() = _binding!!
 
@@ -40,6 +47,10 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+    private var isLocationUpdatesStarted = false
+    private var lastUpdatedLocation: Location? = null
+    private val MIN_DISTANCE_FOR_UPDATE = 10
+
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
@@ -56,6 +67,8 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        observeProperties()
         Log.d("MapDebug", "onViewCreated called")
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
@@ -89,15 +102,23 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateMapLocation(location: Location) {
-        Log.d("MapDebug", "Location updated: ${location.latitude}, ${location.longitude}")
-        val currentLatLng = LatLng(location.latitude, location.longitude)
-        map.addMarker(MarkerOptions().position(currentLatLng).title("Ma Position"))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
+        if (lastUpdatedLocation == null || location.distanceTo(lastUpdatedLocation!!) > MIN_DISTANCE_FOR_UPDATE) {
+            Log.d("MapDebug", "Location updated: ${location.latitude}, ${location.longitude}")
+            val currentLatLng = LatLng(location.latitude, location.longitude)
+            map.addMarker(MarkerOptions().position(currentLatLng).title("Ma Position"))
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
+            lastUpdatedLocation = location
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         Log.d("MapDebug", "onMapReady called")
         map = googleMap
+        map.setOnMarkerClickListener { marker ->
+            val property = marker.tag as? PropertyModels
+            property?.let { openPropertyDetailActivity(it) }
+            true
+        }
 
         val uiSettings = map.uiSettings
         uiSettings.isZoomControlsEnabled = true
@@ -116,6 +137,7 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
                 locationCallback,
                 Looper.getMainLooper()
             )
+            isLocationUpdatesStarted = true
         } else {
             requestLocationPermission()
         }
@@ -128,6 +150,7 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
     override fun onPause() {
         super.onPause()
         stopLocationUpdates()
+        isLocationUpdatesStarted = false
     }
 
 
@@ -187,6 +210,48 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
                 ).show()
             }
         }
+    }
+
+    private fun observeProperties() {
+        viewModel.properties.observe(viewLifecycleOwner) { properties ->
+            // Mettre à jour la carte avec les propriétés
+            updateMapWithProperties(properties)
+        }
+    }
+
+    private fun updateMapWithProperties(properties: List<PropertyWithMainPicture>) {
+        properties.forEach { propertyWithPicture ->
+            val property = propertyWithPicture.property
+            if (property.latitude != 0.0 && property.longitude != 0.0) {
+                val location = LatLng(property.latitude, property.longitude)
+                val markerOptions = MarkerOptions().position(location)
+                    .title(property.type + " - $" + property.price)
+                val marker = map.addMarker(markerOptions)
+                if (marker != null) {
+                    marker.tag = property
+                }
+            }
+        }
+    }
+
+    private fun openPropertyDetailActivity(property: PropertyModels) {
+        val intent = Intent(context, DetailActivity::class.java).apply {
+            putExtra("EXTRA_ID", property.id)
+            putExtra("EXTRA_AGENT_ID", property.agentId)
+            putExtra("EXTRA_PRICE", property.price)
+            putExtra("EXTRA_TYPE", property.type)
+            putExtra("EXTRA_AREA", property.area)
+            putExtra("EXTRA_LOCATION", property.address)
+            putStringArrayListExtra("EXTRA_NEARBY", ArrayList(property.nearbyPointsOfInterest))
+            putExtra("EXTRA_ROOMS", property.numberOfRooms)
+            putExtra("EXTRA_DESCRIPTION", property.fullDescription)
+            putExtra("EXTRA_IS_SOLD", property.status)
+            putExtra("EXTRA_IS_LATITUDE", property.latitude)
+            putExtra("EXTRA_IS_LONGITUDE", property.longitude)
+            putExtra("EXTRA_ENTRY_DATE", property.marketEntryDate.time)
+            property.saleDate?.let { date -> putExtra("EXTRA_SOLD_DATE", date.time) }
+        }
+        startActivity(intent)
     }
 
     override fun onDestroyView() {
