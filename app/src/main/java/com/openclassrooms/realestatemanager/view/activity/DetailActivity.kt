@@ -36,7 +36,7 @@ class DetailActivity : AppCompatActivity() {
         observePicturesViewModel()
         observeAgentViewModel()
 
-        val apiKey = BuildConfig.API_KEY
+        val apiKey = BuildConfig.RR_KEY
 
 
 
