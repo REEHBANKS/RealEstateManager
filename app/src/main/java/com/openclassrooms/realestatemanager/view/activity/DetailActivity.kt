@@ -2,9 +2,13 @@ package com.openclassrooms.realestatemanager.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +36,7 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
         setupRecyclerView()
         observePicturesViewModel()
         observeAgentViewModel()
@@ -121,6 +126,41 @@ class DetailActivity : AppCompatActivity() {
             dateSoldTextView.text = ""
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_new_add -> {
+                Toast.makeText(this, "Add clicked", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            R.id.action_edit -> {
+                Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        super.onPrepareOptionsMenu(menu)
+
+
+        val itemToHide = menu?.findItem(R.id.action_switch_fragment)
+
+
+
+        itemToHide?.isVisible = false
+
+        return true
+    }
+
+
+
 
     private fun setupRecyclerView() {
         imagesAdapter = PropertyImagesAdapter(this)
