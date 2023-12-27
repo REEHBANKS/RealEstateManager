@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.view.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -44,8 +45,6 @@ class DetailActivity : AppCompatActivity() {
         val apiKey = BuildConfig.API_KEY
 
 
-
-
         // Retrieve data passed in the intent
         val id = intent.getStringExtra("EXTRA_ID") ?: ""
         val agentId = intent.getStringExtra("EXTRA_AGENT_ID") ?: ""
@@ -58,8 +57,8 @@ class DetailActivity : AppCompatActivity() {
         val rooms = intent.getIntExtra("EXTRA_ROOMS", 0)
         val description = intent.getStringExtra("EXTRA_DESCRIPTION") ?: ""
         val isSold = intent.getBooleanExtra("EXTRA_IS_SOLD", false)
-        val longitude = intent.getDoubleExtra("EXTRA_IS_LONGITUDE",0.0)
-        val latitude = intent.getDoubleExtra("EXTRA_IS_LATITUDE",0.0)
+        val longitude = intent.getDoubleExtra("EXTRA_IS_LONGITUDE", 0.0)
+        val latitude = intent.getDoubleExtra("EXTRA_IS_LATITUDE", 0.0)
         val entryTimestamp = intent.getLongExtra("EXTRA_ENTRY_DATE", -1L)
         val soldTimestamp = intent.getLongExtra("EXTRA_SOLD_DATE", -1L)
 
@@ -121,7 +120,8 @@ class DetailActivity : AppCompatActivity() {
             // Set state button as "FOR SALE" and update its background
             stateButton.apply {
                 text = "FOR SALE"
-                background = ContextCompat.getDrawable(this@DetailActivity, R.drawable.button_for_sale)
+                background =
+                    ContextCompat.getDrawable(this@DetailActivity, R.drawable.button_for_sale)
             }
             dateSoldTextView.text = ""
         }
@@ -135,9 +135,11 @@ class DetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_new_add -> {
-                Toast.makeText(this, "Add clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, PropertyFormActivity::class.java)
+                startActivity(intent)
                 return true
             }
+
             R.id.action_edit -> {
                 Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show()
                 return true
@@ -160,12 +162,11 @@ class DetailActivity : AppCompatActivity() {
     }
 
 
-
-
     private fun setupRecyclerView() {
         imagesAdapter = PropertyImagesAdapter(this)
         binding.photosRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = imagesAdapter
         }
     }
@@ -176,8 +177,8 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeAgentViewModel(){
-        viewModel.agentLiveData.observe(this) {agent ->
+    private fun observeAgentViewModel() {
+        viewModel.agentLiveData.observe(this) { agent ->
             if (agent != null) {
                 findViewById<TextView>(R.id.agentNameTextView).text = agent.agentName
             }

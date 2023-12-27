@@ -5,5 +5,12 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#101010</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background_color">#FFFFFF</color>
+    <color name="purple_700">#6200EE</color>
+    <color name="gradient_end_color">#303F9F</color>
+    <color name="gradient_start_color">#FF4081</color>
+    <color name="red_color">#AC291F</color>
+    <color name="green_color">#3BAF40</color>
+
 
 </resources>

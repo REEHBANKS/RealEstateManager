@@ -15,4 +15,24 @@
     <string name="error_authentication_canceled">Error authentication canceled</string>
     <string name="reset_password_email_sent">A password reset email has been sent. Please check your inbox.\n</string>
     <string name="error_sending_reset_email">Failed to send reset email. Please try again.</string>
+    <string name="sold">SOLD\n</string>
+    <string name="price">PRICE\n</string>
+    <string name="surface">SURFACE\n</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="property_form">Property Form</string>
+    <string name="submit2">Submit</string>
+    <string name="sold2">Sold</string>
+    <string name="sale_date">Sale Date</string>
+    <string name="property_form2">Property Form</string>
+    <string name="price2">Price</string>
+    <string name="rooms">Rooms</string>
+    <string name="surface2">Surface</string>
+    <string name="address_hint">Address</string>
+    <string name="description">Description</string>
+    <string name="sold3">Sold</string>
+    <string name="on_sale">On Sale</string>
+    <string name="bathrooms">Bathrooms</string>
+    <string name="neighborhood">Neighborhood</string>
+    <string name="nearby">Nearby</string>
 </resources>
