@@ -1,13 +1,11 @@
 package com.openclassrooms.realestatemanager.view.activity
 
-import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -17,17 +15,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Switch
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.google.android.gms.common.api.ApiException
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
@@ -35,23 +29,39 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.models.PhotoDescription
 import com.openclassrooms.realestatemanager.data.models.PropertyModels
-import io.grpc.android.BuildConfig
+import com.openclassrooms.realestatemanager.utils.ImageHelper
+import com.openclassrooms.realestatemanager.utils.PhotoDetailsHelper
+import com.openclassrooms.realestatemanager.view.adapter.PhotoAdapter
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
 class PropertyFormActivity : AppCompatActivity() {
     private var selectedLatLng: LatLng? = null
     private var selectedType: String? = null
     private val selectedNearbyOptions = mutableListOf<String>()
     private var saleDate: Date? = null
+    private lateinit var imageHelper: ImageHelper
+    private lateinit var photoDetailsHelper: PhotoDetailsHelper
+    private lateinit var photoAdapter: PhotoAdapter
+    private val photos: MutableList<PhotoDescription> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_form)
+
+        photoAdapter = PhotoAdapter(photos)
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        recyclerView.isNestedScrollingEnabled = false;
+        recyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.adapter = photoAdapter
+
 
         // Initialize Places before creating the client
         if (!Places.isInitialized()) {
@@ -73,18 +83,27 @@ class PropertyFormActivity : AppCompatActivity() {
 
         setupTypeSpinner()
         setupSaleDate()
+        setupImageHelper()
 
         val spinnerNearby = findViewById<EditText>(R.id.spinnerNearby)
         spinnerNearby.setOnClickListener {
             showNearbyOptionsDialog()
         }
 
+        photoDetailsHelper = PhotoDetailsHelper(this)
+
+        val buttonAddPhotos: Button = findViewById(R.id.buttonAddPhotos)
+        buttonAddPhotos.setOnClickListener {
+            tryToAddNewPhoto()
+        }
+
 
         val buttonSubmit: Button = findViewById(R.id.buttonSubmit)
         buttonSubmit.setOnClickListener {
-            submitProperty()
+            submitForm()
         }
     }
+
 
     private fun setupAutoCompleteAddress(placesClient: PlacesClient) {
         // Implementation of the Place Autocomplete functionality
@@ -106,25 +125,85 @@ class PropertyFormActivity : AppCompatActivity() {
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 
-    // Handle the results of the autocomplete activity
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK && data != null) {
-                // When a place is selected from the autocomplete results
-                val place = Autocomplete.getPlaceFromIntent(data)
-                // Update the address field with the selected place's name
-                findViewById<AutoCompleteTextView>(R.id.autoCompleteTextViewAddress).setText(place.name)
-                // Store the latitude and longitude for later use
-                selectedLatLng = place.latLng!!
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR && data != null) {
-                // Handle error responses
-                val status = Autocomplete.getStatusFromIntent(data)
-                Log.i("PropertyFormActivity", status.statusMessage ?: "Error occurred")
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                ImageHelper.IMAGE_PICK_CODE -> {
+                    Log.d("Activity", "onActivityResult: Image pick success")
+                    imageHelper.handleGalleryResult(data)
+                }
+
+
+                AUTOCOMPLETE_REQUEST_CODE -> {
+                    // Quand un lieu est sélectionné à partir des résultats de l'autocomplete
+                    val place = Autocomplete.getPlaceFromIntent(data!!)
+                    // Mettre à jour le champ d'adresse avec le nom du lieu sélectionné
+                    findViewById<AutoCompleteTextView>(R.id.autoCompleteTextViewAddress).setText(
+                        place.name
+                    )
+                    // Stocker la latitude et la longitude pour une utilisation ultérieure
+                    selectedLatLng = place.latLng!!
+                }
+                // Vous pouvez ajouter d'autres cas pour d'autres `requestCode` si nécessaire
             }
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR && data != null) {
+            // Gérer les erreurs pour l'activité d'autocomplete
+            val status = Autocomplete.getStatusFromIntent(data)
+            Log.i("PropertyFormActivity", status.statusMessage ?: "Error occurred")
         }
     }
+
+    private fun setupImageHelper() {
+        photoDetailsHelper = PhotoDetailsHelper(this)
+        imageHelper = ImageHelper(this) { imageUri ->
+            photoDetailsHelper.promptForPhotoCaption(this) { caption, isMainPhoto ->
+                val photoDescription = PhotoDescription(
+                    id = UUID.randomUUID().toString(),
+                    propertyId = "",
+                    uri = imageUri.toString(),
+                    description = caption,
+                    isMain = isMainPhoto
+                )
+                if (photos.none { it.uri == imageUri.toString() }) {
+                    Log.d("Activity", "Creating PhotoDescription for URI: ${photoDescription.uri}")
+                    updateRecyclerViewWithNewPhoto(photoDescription)
+                }
+            }
+
+        }
+    }
+
+    private fun updateRecyclerViewWithNewPhoto(photoDescription: PhotoDescription) {
+
+        photos.add(photoDescription)
+        Log.d("PropertyFormActivity", "Before adding, photos.size=${photos.size}")
+        photoAdapter.updatePhotos(photos)
+        Log.d("PropertyFormActivity", "After adding, photos.size=${photos.size}")
+    }
+
+
+
+    private fun tryToAddNewPhoto() {
+        if (photos.size >= 9) {
+            Toast.makeText(this, "Maximum of 9 photos allowed", Toast.LENGTH_SHORT).show()
+        } else {
+
+            imageHelper.openGalleryForImage()
+        }
+    }
+
+    private fun submitForm() {
+        if (photos.size < 1) {
+            Toast.makeText(this, "At least one photo is required", Toast.LENGTH_SHORT).show()
+            return
+        }
+        submitProperty()
+
+    }
+
 
     private fun setupTypeSpinner() {
         val spinnerType = findViewById<Spinner>(R.id.spinnerType)
@@ -280,6 +359,7 @@ class PropertyFormActivity : AppCompatActivity() {
         Log.d("PropertyFormActivity", "Property Details: $property")
 
     }
+
 
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1
