@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Switch
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,8 @@ import com.openclassrooms.realestatemanager.data.models.PropertyModels
 import com.openclassrooms.realestatemanager.utils.ImageHelper
 import com.openclassrooms.realestatemanager.utils.PhotoDetailsHelper
 import com.openclassrooms.realestatemanager.view.adapter.PhotoAdapter
+import com.openclassrooms.realestatemanager.viewmodel.PropertyFormViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -41,6 +44,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
+@AndroidEntryPoint
 class PropertyFormActivity : AppCompatActivity() {
     private var selectedLatLng: LatLng? = null
     private var selectedType: String? = null
@@ -50,6 +54,8 @@ class PropertyFormActivity : AppCompatActivity() {
     private lateinit var photoDetailsHelper: PhotoDetailsHelper
     private lateinit var photoAdapter: PhotoAdapter
     private val photos: MutableList<PhotoDescription> = mutableListOf()
+    private val viewModel: PropertyFormViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +67,8 @@ class PropertyFormActivity : AppCompatActivity() {
         recyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = photoAdapter
+
+        observeAddPropertyViewModel()
 
 
         // Initialize Places before creating the client
@@ -356,7 +364,26 @@ class PropertyFormActivity : AppCompatActivity() {
         )
 
         // Afficher les détails de l'objet PropertyModels dans Logcat
-        Log.d("PropertyFormActivity", "Property Details: $property")
+        //Log.d("PropertyFormActivity", "Property Details: $property")
+        val currentDate = Calendar.getInstance().time // Obtenez la date actuelle
+        val propertyWithDate = property.copy(marketEntryDate = currentDate)
+
+        viewModel.addProperty(propertyWithDate)
+
+
+
+
+    }
+
+    private fun observeAddPropertyViewModel(){
+        viewModel.addPropertyResult.observe(this) { result ->
+            if (result) {
+                Toast.makeText(this, "Property added successfully", Toast.LENGTH_LONG).show()
+                // Naviguer vers une autre activité ou mettre à jour l'UI
+            } else {
+                Toast.makeText(this, "Failed to add property", Toast.LENGTH_LONG).show()
+            }
+        }
 
     }
 

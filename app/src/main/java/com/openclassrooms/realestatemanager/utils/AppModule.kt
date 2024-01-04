@@ -29,13 +29,17 @@ object AppModule {
 
     @Provides
     fun provideGetPicturesForPropertyUseCase(
-        pictureRepository: PictureRepository):
-            GetPicturesForPropertyUseCase{
+        pictureRepository: PictureRepository
+    ):
+            GetPicturesForPropertyUseCase {
         return GetPicturesForPropertyUseCase(pictureRepository)
     }
 
     @Provides
-    fun provideAddPropertyUseCase(propertyRepository: PropertyRepository): AddPropertyUseCase {
+    fun provideAddPropertyUseCase(
+        propertyRepository: PropertyRepository
+    ):
+            AddPropertyUseCase {
         return AddPropertyUseCase(propertyRepository)
     }
 

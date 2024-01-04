@@ -7,6 +7,11 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PROJECT_9.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PROJECT_9.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PROJECT_9.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PROJECT_9.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PROJECT_9.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PROJECT_9.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RealEstateManager.iml" filepath="$PROJECT_DIR$/.idea/modules/RealEstateManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RealEstateManager.app.unitTest.iml" />
     </modules>
   </component>
 </project>
