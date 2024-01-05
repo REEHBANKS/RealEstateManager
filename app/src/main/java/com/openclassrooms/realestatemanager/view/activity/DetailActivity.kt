@@ -100,7 +100,7 @@ class DetailActivity : AppCompatActivity() {
             dateEntryTextView.text = "Entry date not available"
         }
 
-        if (!isSold) {
+        if (isSold) {
             // Set state button as "SOLD" and update its background
             stateButton.apply {
                 text = "SOLD"

@@ -18,6 +18,7 @@ import android.widget.Switch
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.model.LatLng
@@ -68,7 +69,8 @@ class PropertyFormActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = photoAdapter
 
-        observeAddPropertyViewModel()
+        observeViewModel()
+        observeImageUploadViewModel()
 
 
         // Initialize Places before creating the client
@@ -167,22 +169,31 @@ class PropertyFormActivity : AppCompatActivity() {
     private fun setupImageHelper() {
         photoDetailsHelper = PhotoDetailsHelper(this)
         imageHelper = ImageHelper(this) { imageUri ->
+            val inputStream = contentResolver.openInputStream(imageUri)
+            if (inputStream != null) {
+                viewModel.uploadImage(inputStream)
+            }
+        }
+    }
+
+    private fun observeImageUploadViewModel() {
+        viewModel.imageUploadLiveData.observe(this) { downloadUrl ->
+            // Utiliser l'URL pour mettre à jour l'interface utilisateur ou pour la stocker dans PhotoDescription
             photoDetailsHelper.promptForPhotoCaption(this) { caption, isMainPhoto ->
                 val photoDescription = PhotoDescription(
                     id = UUID.randomUUID().toString(),
-                    propertyId = "",
-                    uri = imageUri.toString(),
+                    propertyId = "", // Vous devez définir cela après avoir ajouté la propriété
+                    uri = downloadUrl, // Ici, utilisez l'URL de téléchargement
                     description = caption,
                     isMain = isMainPhoto
                 )
-                if (photos.none { it.uri == imageUri.toString() }) {
-                    Log.d("Activity", "Creating PhotoDescription for URI: ${photoDescription.uri}")
-                    updateRecyclerViewWithNewPhoto(photoDescription)
-                }
+                photos.add(photoDescription)
+                // Mettre à jour RecyclerView ou toute autre vue que vous utilisez pour afficher les images
+                updateRecyclerViewWithNewPhoto(photoDescription)
             }
-
         }
     }
+
 
     private fun updateRecyclerViewWithNewPhoto(photoDescription: PhotoDescription) {
 
@@ -368,29 +379,47 @@ class PropertyFormActivity : AppCompatActivity() {
         val currentDate = Calendar.getInstance().time // Obtenez la date actuelle
         val propertyWithDate = property.copy(marketEntryDate = currentDate)
 
-        viewModel.addProperty(propertyWithDate)
-
-
-
+        viewModel.submitPropertyAndPhotos(propertyWithDate,photos)
 
     }
 
-    private fun observeAddPropertyViewModel(){
-        viewModel.addPropertyResult.observe(this) { result ->
-            if (result) {
-                Toast.makeText(this, "Property added successfully", Toast.LENGTH_LONG).show()
-                // Naviguer vers une autre activité ou mettre à jour l'UI
-            } else {
-                Toast.makeText(this, "Failed to add property", Toast.LENGTH_LONG).show()
+    private fun observeViewModel() {
+        viewModel.operationStatus.observe(this) { status ->
+            when (status) {
+                PropertyFormViewModel.OperationStatus.SUCCESS -> {
+                    Toast.makeText(
+                        this,
+                        "Property and photos added successfully",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    findNavController(R.id.nav_host_fragment).popBackStack(R.id.listRealEstatePropertyFragment2, false)
+
+                }
+
+                PropertyFormViewModel.OperationStatus.PROPERTY_FAILURE -> {
+                    Toast.makeText(this, "Failed to add property", Toast.LENGTH_LONG).show()
+                }
+
+                PropertyFormViewModel.OperationStatus.PHOTOS_FAILURE -> {
+                    Toast.makeText(this, "Failed to add photos", Toast.LENGTH_LONG).show()
+                }
+
+                null -> {
+                    // Gérer le cas où status est null, si nécessaire
+                    Toast.makeText(this, "Operation status is undefined", Toast.LENGTH_LONG).show()
+                }
+
+                else -> {
+                    // Cela couvrira tout autre cas non spécifié, y compris null
+                    Toast.makeText(this, "Unexpected status", Toast.LENGTH_LONG).show()
+                }
             }
         }
-
     }
 
+        companion object {
+            private const val AUTOCOMPLETE_REQUEST_CODE = 1
+        }
 
-    companion object {
-        private const val AUTOCOMPLETE_REQUEST_CODE = 1
+
     }
-
-
-}

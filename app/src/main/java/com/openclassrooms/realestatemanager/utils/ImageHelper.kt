@@ -24,16 +24,13 @@ class ImageHelper(private val activity: Activity, private val onImageSelected: (
             for (i in 0 until clipData.itemCount) {
                 val imageUri = clipData.getItemAt(i).uri
                 imageUris.add(imageUri)
-                Log.d("ImageHelper", "handleGalleryResult: clipData URI added: $imageUri")
             }
         } else {
             data?.data?.let { imageUri ->
                 imageUris.add(imageUri)
-                Log.d("ImageHelper", "handleGalleryResult: singleData URI added: $imageUri")
             }
         }
 
-        Log.d("ImageHelper", "handleGalleryResult: Total URIs returned: ${imageUris.size}")
 
         // Passez chaque URI à la fonction onImageSelected
         imageUris.forEach { imageUri ->

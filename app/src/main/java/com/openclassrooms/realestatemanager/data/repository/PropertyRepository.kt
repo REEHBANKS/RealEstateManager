@@ -8,7 +8,7 @@ import kotlinx.coroutines.tasks.await
 @Suppress("DEPRECATION")
 class PropertyRepository (private val firestore: FirebaseFirestore) {
 
-    suspend fun addProperty(property: PropertyModels): Boolean {
+    suspend fun addProperty(property: PropertyModels): String ? {
         return try {
             // Générer un nouvel ID de document
             val newPropertyRef = firestore.collection("properties").document()
@@ -19,9 +19,9 @@ class PropertyRepository (private val firestore: FirebaseFirestore) {
 
             // Sauvegarder la nouvelle propriété avec l'ID dans Firestore
             newPropertyRef.set(newProperty).await()
-            true
+            newPropertyId
         } catch (e: Exception) {
-            false
+            null
         }
     }
 

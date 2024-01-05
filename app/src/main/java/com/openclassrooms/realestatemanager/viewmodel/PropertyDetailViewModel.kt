@@ -30,10 +30,6 @@ class PropertyDetailViewModel @Inject constructor(
             val pictures = getPicturesForPropertyUseCase.execute(propertyId)
             _picturesLiveData.postValue(pictures)
 
-            // Loguer les identifiants des photos pour vérification
-            pictures.forEach { picture ->
-                Log.d("PropertyDetailViewModel", "Photo ID: ${picture.description}")
-            }
         }
     }
 

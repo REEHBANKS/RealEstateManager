@@ -32,7 +32,6 @@ class ListPropertyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.maybeAddFakeProperties()
 
 
         val adaptor = PropertyAdapter(requireContext()) { property ->
