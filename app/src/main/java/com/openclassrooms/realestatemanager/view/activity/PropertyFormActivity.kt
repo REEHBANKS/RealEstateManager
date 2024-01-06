@@ -32,6 +32,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.models.PhotoDescription
+import com.openclassrooms.realestatemanager.data.models.PropertyDetailsWithPictures
 import com.openclassrooms.realestatemanager.data.models.PropertyModels
 import com.openclassrooms.realestatemanager.utils.ImageHelper
 import com.openclassrooms.realestatemanager.utils.PhotoDetailsHelper
@@ -55,12 +56,28 @@ class PropertyFormActivity : AppCompatActivity() {
     private lateinit var photoDetailsHelper: PhotoDetailsHelper
     private lateinit var photoAdapter: PhotoAdapter
     private val photos: MutableList<PhotoDescription> = mutableListOf()
+    private var existingPhotos: List<PhotoDescription> = listOf()
     private val viewModel: PropertyFormViewModel by viewModels()
+    private var mode:String? =""
+    private var propertyId:String =""
+    private var originalLatitude: Double? = null
+    private var originalLongitude: Double? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_form)
+
+         mode = intent.getStringExtra("mode")
+         propertyId = intent.getStringExtra("property_id").toString()
+
+        if (mode == "edit") {
+            viewModel.loadProperty(propertyId)
+
+
+        }
+
+
 
         photoAdapter = PhotoAdapter(photos)
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
@@ -71,6 +88,7 @@ class PropertyFormActivity : AppCompatActivity() {
 
         observeViewModel()
         observeImageUploadViewModel()
+        observePropertyDetails()
 
 
         // Initialize Places before creating the client
@@ -112,6 +130,47 @@ class PropertyFormActivity : AppCompatActivity() {
         buttonSubmit.setOnClickListener {
             submitForm()
         }
+    }
+
+    private fun observePropertyDetails() {
+        viewModel.propertyDetails.observe(this) { details ->
+            details?.let {
+                fillFormWithData(it.property)
+                loadImages(it.pictures)
+                existingPhotos = it.pictures
+            }
+        }
+    }
+
+
+    private fun fillFormWithData(property: PropertyModels) {
+        findViewById<EditText>(R.id.editTextPrice).setText(property.price.toString())
+        findViewById<EditText>(R.id.editTextRooms).setText(property.numberOfRooms.toString())
+        findViewById<EditText>(R.id.editTextBathRooms).setText(property.numberOfBathrooms.toString())
+        findViewById<EditText>(R.id.editTextSurface).setText(property.area.toString())
+        findViewById<AutoCompleteTextView>(R.id.autoCompleteTextViewAddress).setText(property.address)
+        findViewById<EditText>(R.id.editTextDescription).setText(property.fullDescription)
+        findViewById<SwitchMaterial>(R.id.switchSold).isChecked = property.status
+        // Gérer la date de vente si la propriété est vendue
+        if (property.status && property.saleDate != null) {
+            saleDate = property.saleDate
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE)
+            findViewById<EditText>(R.id.editTextSaleDate).setText(dateFormat.format(property.saleDate))
+        }
+
+        findViewById<EditText>(R.id.editTextBathRooms).setText(property.numberOfBathrooms.toString())
+        findViewById<EditText>(R.id.editTextNeighborhood).setText(property.neighborhood)
+
+        originalLatitude = property.latitude
+        originalLongitude = property.longitude
+
+
+    }
+
+    private fun loadImages(pictures: List<PhotoDescription>) {
+        photoAdapter.updatePhotos(pictures)
+        photoAdapter.notifyDataSetChanged()
+
     }
 
 
@@ -202,7 +261,6 @@ class PropertyFormActivity : AppCompatActivity() {
         photoAdapter.updatePhotos(photos)
         Log.d("PropertyFormActivity", "After adding, photos.size=${photos.size}")
     }
-
 
 
     private fun tryToAddNewPhoto() {
@@ -369,17 +427,25 @@ class PropertyFormActivity : AppCompatActivity() {
             status = isSold,
             nearbyPointsOfInterest = selectedNearbyOptions,
             saleDate = saleDate,
-            latitude = selectedLatLng!!.latitude,
-            longitude = selectedLatLng!!.longitude,
+            latitude = selectedLatLng?.latitude ?: originalLatitude ?: 0.0,
+            longitude = selectedLatLng?.longitude ?: originalLongitude ?: 0.0,
             agentId = FirebaseAuth.getInstance().currentUser?.uid ?: "anonymous"
         )
 
-        // Afficher les détails de l'objet PropertyModels dans Logcat
-        //Log.d("PropertyFormActivity", "Property Details: $property")
         val currentDate = Calendar.getInstance().time // Obtenez la date actuelle
         val propertyWithDate = property.copy(marketEntryDate = currentDate)
 
-        viewModel.submitPropertyAndPhotos(propertyWithDate,photos)
+
+
+        if (mode == "edit") {
+
+            val newPhotos = photos.filter { newPhoto ->
+                existingPhotos.none { existingPhoto -> existingPhoto.id == newPhoto.id }
+            }
+            viewModel.updateProperty(propertyId, property, newPhotos)
+        } else {
+            viewModel.submitPropertyAndPhotos(propertyWithDate, photos)
+        }
 
     }
 
@@ -392,7 +458,10 @@ class PropertyFormActivity : AppCompatActivity() {
                         "Property and photos added successfully",
                         Toast.LENGTH_LONG
                     ).show()
-                    findNavController(R.id.nav_host_fragment).popBackStack(R.id.listRealEstatePropertyFragment2, false)
+                    findNavController(R.id.nav_host_fragment).popBackStack(
+                        R.id.listRealEstatePropertyFragment2,
+                        false
+                    )
 
                 }
 
@@ -417,9 +486,9 @@ class PropertyFormActivity : AppCompatActivity() {
         }
     }
 
-        companion object {
-            private const val AUTOCOMPLETE_REQUEST_CODE = 1
-        }
-
-
+    companion object {
+        private const val AUTOCOMPLETE_REQUEST_CODE = 1
     }
+
+
+}

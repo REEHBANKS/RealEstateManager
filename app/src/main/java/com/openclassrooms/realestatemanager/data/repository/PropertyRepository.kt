@@ -40,7 +40,10 @@ class PropertyRepository (private val firestore: FirebaseFirestore) {
 
     suspend fun updateProperty(propertyId: String, updatedProperty: PropertyModels): Boolean {
         return try {
-            firestore.collection("properties").document(propertyId).set(updatedProperty).await()
+
+            val propertyToUpdate = updatedProperty.copy(id = propertyId)
+
+            firestore.collection("properties").document(propertyId).set(propertyToUpdate).await()
             true
         } catch (e: Exception) {
             false

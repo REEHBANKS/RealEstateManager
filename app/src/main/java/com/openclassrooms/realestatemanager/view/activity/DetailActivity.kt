@@ -31,6 +31,8 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: PropertyDetailViewModel by viewModels()
     private lateinit var imagesAdapter: PropertyImagesAdapter
+    private var propertyId: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +48,7 @@ class DetailActivity : AppCompatActivity() {
 
 
         // Retrieve data passed in the intent
-        val id = intent.getStringExtra("EXTRA_ID") ?: ""
+         propertyId = intent.getStringExtra("EXTRA_ID") ?: ""
         val agentId = intent.getStringExtra("EXTRA_AGENT_ID") ?: ""
         val price = intent.getIntExtra("EXTRA_PRICE", 0)
         val type = intent.getStringExtra("EXTRA_TYPE") ?: ""
@@ -84,7 +86,7 @@ class DetailActivity : AppCompatActivity() {
             .into(mapImageView)
 
         // Get Gallery picture
-        viewModel.getPicturesForProperty(id)
+        viewModel.getPicturesForProperty(propertyId)
 
         // Get Agent
         viewModel.getOneAgentWithId(agentId)
@@ -141,7 +143,10 @@ class DetailActivity : AppCompatActivity() {
             }
 
             R.id.action_edit -> {
-                Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, PropertyFormActivity::class.java)
+                intent.putExtra("property_id", propertyId)
+                intent.putExtra("mode", "edit")
+                startActivity(intent)
                 return true
             }
         }
