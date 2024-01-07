@@ -28,9 +28,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.data.models.PropertyModels
-import com.openclassrooms.realestatemanager.data.models.PropertyWithMainPicture
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyWithMainPicture
 import com.openclassrooms.realestatemanager.databinding.FragmentMapRealEstatePropertyBinding
 import com.openclassrooms.realestatemanager.view.activity.DetailActivity
 import com.openclassrooms.realestatemanager.viewmodel.MapPropertyViewModel

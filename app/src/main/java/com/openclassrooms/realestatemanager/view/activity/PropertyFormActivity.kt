@@ -31,9 +31,8 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.data.models.PhotoDescription
-import com.openclassrooms.realestatemanager.data.models.PropertyDetailsWithPictures
-import com.openclassrooms.realestatemanager.data.models.PropertyModels
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PhotoDescription
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
 import com.openclassrooms.realestatemanager.utils.ImageHelper
 import com.openclassrooms.realestatemanager.utils.PhotoDetailsHelper
 import com.openclassrooms.realestatemanager.view.adapter.PhotoAdapter

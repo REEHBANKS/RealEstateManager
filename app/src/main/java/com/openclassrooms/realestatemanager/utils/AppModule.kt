@@ -1,5 +1,10 @@
 package com.openclassrooms.realestatemanager.utils
 
+import android.content.Context
+import androidx.room.Room
+import com.openclassrooms.realestatemanager.data.AppDatabase
+import com.openclassrooms.realestatemanager.data.PhotoDao
+import com.openclassrooms.realestatemanager.data.PropertyDao
 import com.openclassrooms.realestatemanager.data.repository.AgentRepository
 import com.openclassrooms.realestatemanager.data.repository.PictureRepository
 import com.openclassrooms.realestatemanager.data.repository.PropertyRepository
@@ -15,7 +20,9 @@ import com.openclassrooms.realestatemanager.view.useCase.UploadImageUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -79,6 +86,29 @@ object AppModule {
     fun provideUploadImageUseCase(pictureRepository: PictureRepository): UploadImageUseCase {
         return UploadImageUseCase(pictureRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@ApplicationContext appContext: Context): AppDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            AppDatabase::class.java,
+            "real estate manager BDD "
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Provides
+    fun providePropertyDao(database: AppDatabase): PropertyDao {
+        return database.propertyDao()
+    }
+
+    @Provides
+    fun providePhotoDao(database: AppDatabase): PhotoDao {
+        return database.photoDao()
+    }
+
 
 
 

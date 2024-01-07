@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.realestatemanager.data.models.PropertyWithMainPicture
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyWithMainPicture
 import com.openclassrooms.realestatemanager.view.useCase.GetAllPropertiesWithMainPictureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

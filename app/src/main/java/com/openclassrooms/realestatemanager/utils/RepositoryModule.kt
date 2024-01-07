@@ -5,6 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import com.google.firebase.firestore.FirebaseFirestore
+import com.openclassrooms.realestatemanager.data.PhotoDao
+import com.openclassrooms.realestatemanager.data.PropertyDao
 import com.openclassrooms.realestatemanager.data.repository.AgentRepository
 import com.openclassrooms.realestatemanager.data.repository.PictureRepository
 import com.openclassrooms.realestatemanager.data.repository.PropertyRepository
@@ -14,14 +16,21 @@ import com.openclassrooms.realestatemanager.data.repository.PropertyRepository
 object RepositoryModule {
 
     @Provides
-    fun providePictureRepository(firestore: FirebaseFirestore): PictureRepository {
-        return PictureRepository(firestore)
+    fun providePictureRepository(
+        firestore: FirebaseFirestore,
+        photoDao: PhotoDao
+    ): PictureRepository {
+        return PictureRepository(firestore, photoDao)
     }
 
     @Provides
-    fun providePropertyRepository(firestore: FirebaseFirestore): PropertyRepository {
-        return PropertyRepository(firestore)
+    fun providePropertyRepository(
+        firestore: FirebaseFirestore,
+        propertyDao: PropertyDao
+    ): PropertyRepository {
+        return PropertyRepository(firestore, propertyDao)
     }
+
 
     @Provides
     fun provideAgentRepository(firestore: FirebaseFirestore): AgentRepository {

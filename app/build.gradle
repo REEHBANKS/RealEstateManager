@@ -42,10 +42,12 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        kotlinCompilerExtensionVersion '1.4.2'
     }
 
     buildFeatures {
         buildConfig true
+        compose true
     }
 
 }
@@ -54,7 +56,7 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.21'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.annotation:annotation:1.7.1'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.10.0'
     implementation 'com.google.firebase:firebase-storage-ktx:20.3.0'
     testImplementation 'junit:junit:4.13.2'
@@ -78,13 +80,15 @@ dependencies {
 
 
     //Couritine
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
 
     // Lifecycle components for LiveData and ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
+
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.46.1"
@@ -103,6 +107,56 @@ dependencies {
 
     //Place API
     implementation 'com.google.android.libraries.places:places:3.3.0'
+
+    // Room components
+    implementation "androidx.room:room-runtime:2.6.1"
+    kapt "androidx.room:room-compiler:2.6.1"
+    implementation "androidx.room:room-ktx:2.6.1"
+
+    // Testing Room (Optionnel)
+    testImplementation "androidx.room:room-testing:2.6.1"
+
+    // Compose UI
+    implementation "androidx.compose.ui:ui:1.5.4"
+
+    // Tooling support (Preview, etc.)
+    implementation "androidx.compose.ui:ui-tooling:1.5.4"
+
+
+    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
+    implementation "androidx.compose.foundation:foundation:1.5.4"
+
+    // Material Design
+    implementation "androidx.compose.material:material:1.5.4"
+
+    // Material Design icons
+    implementation "androidx.compose.material:material-icons-core:1.5.4"
+    implementation "androidx.compose.material:material-icons-extended:1.5.4"
+
+    // Integration with activities
+    implementation "androidx.activity:activity-compose:1.8.2"
+
+    // Integration with ViewModels
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
+
+    // Navigation Component for Compose
+    implementation "androidx.navigation:navigation-compose:2.7.6"
+
+    // LiveData to observe data
+    implementation "androidx.compose.runtime:runtime-livedata:1.5.4"
+
+    // Testing
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.5.4"
+    debugImplementation "androidx.compose.ui:ui-tooling:1.5.4"
+}
+
+
+
+
+
+// Enable Kotlin kapt for androidx.room.compiler
+kapt {
+    correctErrorTypes true
 
 
 

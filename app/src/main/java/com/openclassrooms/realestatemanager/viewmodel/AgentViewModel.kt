@@ -3,11 +3,8 @@ package com.openclassrooms.realestatemanager.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.openclassrooms.realestatemanager.data.models.AgentModel
 import com.openclassrooms.realestatemanager.view.useCase.AddAgentUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
 class AgentViewModel @Inject constructor(

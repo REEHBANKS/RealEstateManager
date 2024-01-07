@@ -1,17 +1,11 @@
 package com.openclassrooms.realestatemanager.view.adapter
 
-import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.data.models.PhotoDescription
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PhotoDescription
 import com.openclassrooms.realestatemanager.databinding.PhotoDetailItemBinding
 
 class PhotoAdapter(private var photos: MutableList<PhotoDescription>) :

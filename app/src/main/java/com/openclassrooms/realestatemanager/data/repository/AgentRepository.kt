@@ -3,7 +3,7 @@ package com.openclassrooms.realestatemanager.data.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
-import com.openclassrooms.realestatemanager.data.models.AgentModel
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.AgentModel
 import kotlinx.coroutines.tasks.await
 
 class AgentRepository(private val firestore: FirebaseFirestore) {

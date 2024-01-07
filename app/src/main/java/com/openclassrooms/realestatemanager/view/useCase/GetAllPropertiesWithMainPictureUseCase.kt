@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.view.useCase
 
-import com.openclassrooms.realestatemanager.data.models.PropertyWithMainPicture
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyWithMainPicture
 import com.openclassrooms.realestatemanager.data.repository.PictureRepository
 import com.openclassrooms.realestatemanager.data.repository.PropertyRepository
 

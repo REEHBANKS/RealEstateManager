@@ -1,12 +1,11 @@
 package com.openclassrooms.realestatemanager.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.realestatemanager.data.models.AgentModel
-import com.openclassrooms.realestatemanager.data.models.PhotoDescription
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.AgentModel
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PhotoDescription
 import com.openclassrooms.realestatemanager.view.useCase.GetAgentByIdUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetPicturesForPropertyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

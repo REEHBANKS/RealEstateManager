@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.view.useCase
 
-import com.openclassrooms.realestatemanager.data.models.AgentModel
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.AgentModel
 import com.openclassrooms.realestatemanager.data.repository.AgentRepository
 
 class GetAgentByIdUseCase(private val agentRepository: AgentRepository) {

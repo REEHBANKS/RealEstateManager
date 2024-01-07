@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.view.useCase
 
-import com.openclassrooms.realestatemanager.data.models.PropertyModels
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
 import com.openclassrooms.realestatemanager.data.repository.PropertyRepository
 
 class AddPropertyUseCase(private val propertyRepository: PropertyRepository) {

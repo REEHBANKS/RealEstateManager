@@ -1,23 +1,20 @@
 package com.openclassrooms.realestatemanager.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.realestatemanager.data.models.PhotoDescription
-import com.openclassrooms.realestatemanager.data.models.PropertyDetailsWithPictures
-import com.openclassrooms.realestatemanager.data.models.PropertyModels
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PhotoDescription
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyDetailsWithPictures
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
 import com.openclassrooms.realestatemanager.view.useCase.AddPhotosUseCase
 import com.openclassrooms.realestatemanager.view.useCase.AddPropertyUseCase
-import com.openclassrooms.realestatemanager.view.useCase.GetPicturesForPropertyUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetPropertyDetailsWithPictures
 import com.openclassrooms.realestatemanager.view.useCase.UpdatePropertyUseCase
 import com.openclassrooms.realestatemanager.view.useCase.UploadImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.InputStream
-import java.security.PrivateKey
 import javax.inject.Inject
 
 @HiltViewModel

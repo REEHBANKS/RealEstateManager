@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.data.models
+package com.openclassrooms.realestatemanager.data.models.modelFirebase
 
 data class PhotoDescription(
     var id: String = "", // ID unique de la photo

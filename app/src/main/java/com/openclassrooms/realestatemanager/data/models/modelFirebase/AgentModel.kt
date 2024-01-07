@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.data.models
+package com.openclassrooms.realestatemanager.data.models.modelFirebase
 
 data class AgentModel(
     var agentId: String = "",

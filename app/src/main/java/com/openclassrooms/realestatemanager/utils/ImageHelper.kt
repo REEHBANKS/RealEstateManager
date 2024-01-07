@@ -3,9 +3,6 @@ package com.openclassrooms.realestatemanager.utils
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import com.openclassrooms.realestatemanager.data.models.PhotoDescription
-import java.util.UUID
 
 class ImageHelper(private val activity: Activity, private val onImageSelected: (Uri) -> Unit) {
 

@@ -1,20 +1,13 @@
 package com.openclassrooms.realestatemanager.view.adapter
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.view.activity.DetailActivity
 import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstatePropertyFragmentItemBinding
-import com.openclassrooms.realestatemanager.data.models.PropertyModels
-import com.openclassrooms.realestatemanager.data.models.PropertyWithMainPicture
+import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyWithMainPicture
 import java.text.NumberFormat
 import java.util.Locale
 
