@@ -26,6 +26,9 @@ android {
 
         buildConfigField 'String', 'API_KEY', "\"${key}\""
         manifestPlaceholders = [RR_KEY: key]
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
     buildTypes {
         release {
@@ -53,6 +56,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.4'
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
 
 }
 
@@ -63,6 +74,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.10.0'
     implementation 'com.google.firebase:firebase-storage-ktx:20.3.0'
+    implementation platform('androidx.compose:compose-bom:2023.03.00')
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -96,6 +111,8 @@ dependencies {
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.46.1"
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
     kapt "com.google.dagger:hilt-compiler:2.46.1"
 
     // Glide library

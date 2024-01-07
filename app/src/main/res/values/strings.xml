@@ -35,4 +35,5 @@
     <string name="bathrooms">Bathrooms</string>
     <string name="neighborhood">Neighborhood</string>
     <string name="nearby">Nearby</string>
+    <string name="title_activity_search">SearchActivity</string>
 </resources>
