@@ -1,7 +1,7 @@
 package com.openclassrooms.realestatemanager.view.activity
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -42,23 +42,32 @@ class MainActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         super.onPrepareOptionsMenu(menu)
 
+        // Récupérer les éléments de menu
+        val searchItem = menu?.findItem(R.id.action_search)
         val editToHide = menu?.findItem(R.id.action_edit)
         val addToHide = menu?.findItem(R.id.action_new_add)
 
+        // Masquer certains éléments
         editToHide?.isVisible = false
         addToHide?.isVisible = false
+        searchItem?.isVisible = false
 
-
+        // Récupérer le NavController et l'ID du fragment actuel
         val navController = findNavController(R.id.nav_host_fragment)
         val currentDestinationId = navController.currentDestination?.id
+
+        // Gérer la visibilité de l'élément de recherche
+        searchItem?.isVisible = currentDestinationId == R.id.listRealEstatePropertyFragment2
+
+        // Modifier l'icône de l'élément de basculement entre les fragments
         val switchFragmentItem = menu?.findItem(R.id.action_switch_fragment)
-        if (currentDestinationId == R.id.listRealEstatePropertyFragment2) {
-            switchFragmentItem?.setIcon(R.drawable.baseline_map_24) // Set to map icon
-        } else if (currentDestinationId == R.id.mapRealEstatePropertyFragment) {
-            switchFragmentItem?.setIcon(R.drawable.baseline_format_list_bulleted_24) // Set to list icon
+        when (currentDestinationId) {
+            R.id.listRealEstatePropertyFragment2 -> switchFragmentItem?.setIcon(R.drawable.baseline_map_24)
+            R.id.mapRealEstatePropertyFragment -> switchFragmentItem?.setIcon(R.drawable.baseline_format_list_bulleted_24)
         }
         return true
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -73,6 +82,11 @@ class MainActivity : AppCompatActivity() {
                     item.setIcon(R.drawable.baseline_map_24)
                 }
                 return true
+            }
+
+            R.id.action_search -> {
+                val intent = Intent(this, SearchActivity::class.java)
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)

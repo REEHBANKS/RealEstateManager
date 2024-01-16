@@ -3,9 +3,10 @@ package com.openclassrooms.realestatemanager.view.activity
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -23,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,7 +49,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,23 +61,20 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 
-class MyComposeActivity : ComponentActivity() {
+class SearchActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FilterScreen()
+            MaterialTheme {
+                FilterScreen()
+            }
         }
     }
 }
@@ -88,6 +86,9 @@ fun FilterScreen() {
     val selectedProximityItems = remember { mutableStateOf(setOf<String>()) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var filterByPhotoCount by remember { mutableStateOf(false) }
+    val selectedOptionType = remember { mutableStateOf<String?>(null) }
+    val minValue = remember { mutableStateOf<Int?>(null) }
+    val maxValue = remember { mutableStateOf<Int?>(null) }
     val context = LocalContext.current
 
     Scaffold(
@@ -104,12 +105,44 @@ fun FilterScreen() {
                     // If you have any actions, they go here.
                 }
             )
+
+        },
+        bottomBar = {
+            SearchActionBar(
+                onValidate = {
+
+                    // Supposons que minValue et maxValue soient définis quelque part dans votre FilterScreen
+                    val min = minValue.value ?: 0
+                    val max = maxValue.value ?: Int.MAX_VALUE
+
+                    if (min > max) {
+                        // Affichez une erreur à l'utilisateur, par exemple avec un Toast ou un SnackBar
+                        Toast.makeText(context, "La valeur minimale ne peut pas être supérieure à la valeur maximale.", Toast.LENGTH_LONG).show()
+                    } else {
+                        // Code pour valider la recherche
+                        Log.d("FilterScreen", "Selected option type: ${selectedOptionType.value}")
+                        Log.d("FilterScreen", "Selected option minSurface: ${minValue.value}")
+                        Log.d("FilterScreen", "Selected option maxSurface: ${maxValue.value}")
+                    }
+                },
+                onReset = {
+                    // Code pour réinitialiser la recherche
+                }
+            )
         }
-    ) {
+
+
+    )
+
+
+
+
+
+    {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(15.dp)
         ) {
             // "Type" section title
             Text(
@@ -127,9 +160,10 @@ fun FilterScreen() {
 
             // Chip row for property types
             // Here you should place your FilterChip composable
-            FilterChipRow()
+            FilterChipRow(selectedOption = selectedOptionType)
 
-            Divider(modifier = Modifier.padding(top = 30.dp)) // ... rest of your content
+
+            Divider(modifier = Modifier.padding(top = 5.dp)) // ... rest of your content
 
             Text(
                 text = "Surface (m2)",
@@ -142,7 +176,7 @@ fun FilterScreen() {
                 )
 
             )
-            MinMaxInputFields()
+            MinMaxInputFields(minValueState = minValue, maxValueState = maxValue  )
 
             Divider(modifier = Modifier.padding(top = 0.dp))
 
@@ -159,7 +193,7 @@ fun FilterScreen() {
             )
             MultipleFilterChipRow(selectedItems = selectedProximityItems)
 
-            Divider(modifier = Modifier.padding(top = 30.dp))
+            Divider(modifier = Modifier.padding(top = 15.dp))
 
             Text(
                 text = "On Market Since",
@@ -209,7 +243,7 @@ fun FilterScreen() {
                 Text("Selected date: ${it.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}")
             }
 
-            Divider(modifier = Modifier.padding(top = 30.dp))
+            Divider(modifier = Modifier.padding(top = 15.dp))
 
             Text(
                 text = "Price (€)",
@@ -224,7 +258,11 @@ fun FilterScreen() {
             )
             PriceRangeInputFields()
 
-            Divider(modifier = Modifier.padding(top = 0.dp))
+            Divider(modifier = Modifier
+                .padding(top = 0.dp)
+                .padding(bottom = 0.dp)
+
+            )
 
             Text(
                 text = "Pictures",
@@ -278,6 +316,7 @@ fun FilterScreen() {
             }
 
 
+
         }
 
 
@@ -285,7 +324,8 @@ fun FilterScreen() {
 }
 
 @Composable
-fun FilterChipRow() {
+fun FilterChipRow(selectedOption: MutableState<String?>) {
+
     // This is just a placeholder for your chip layout logic
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -293,13 +333,21 @@ fun FilterChipRow() {
             .fillMaxWidth()
             .padding(top = 15.dp)
     ) {
-        FilterChip(text = "Flat", isSelected = true, onSelected = { /* TODO */ })
+        FilterChip(text = "Flat", isSelected = selectedOption.value == "Flat") {
+            selectedOption.value = if (selectedOption.value == "Flat") null else "Flat"
+        }
         Spacer(modifier = Modifier.width(8.dp))
-        FilterChip(text = "Loft", isSelected = false, onSelected = { /* TODO */ })
+        FilterChip(text = "Loft", isSelected = selectedOption.value == "Loft") {
+            selectedOption.value = if (selectedOption.value == "Loft") null else "Loft"
+        }
         Spacer(modifier = Modifier.width(8.dp))
-        FilterChip(text = "Duplex", isSelected = false, onSelected = { /* TODO */ })
+        FilterChip(text = "Duplex", isSelected = selectedOption.value == "Duplex") {
+            selectedOption.value = if (selectedOption.value == "Duplex") null else "Duplex"
+        }
         Spacer(modifier = Modifier.width(8.dp))
-        FilterChip(text = "House", isSelected = false, onSelected = { /* TODO */ })
+        FilterChip(text = "House", isSelected = selectedOption.value == "House") {
+            selectedOption.value = if (selectedOption.value == "House") null else "House"
+        }
         // Add more chips as needed
     }
 }
@@ -328,27 +376,16 @@ fun FilterChip(text: String, isSelected: Boolean, onSelected: () -> Unit) {
 }
 
 @Composable
-fun MinMaxInputFields() {
+fun MinMaxInputFields(minValueState: MutableState<Int?>,maxValueState: MutableState<Int?> ) {
     // État pour stocker et contrôler les valeurs min et max
-    var minValue by remember { mutableStateOf("") }
-    var maxValue by remember { mutableStateOf("") }
 
-    // Convertir en nombres pour la comparaison, en traitant les entrées vides comme zéro
-    val minNumber = minValue.toIntOrNull() ?: 0
-    val maxNumber = maxValue.toIntOrNull() ?: Int.MAX_VALUE
-
-    // Fonction de validation pour s'assurer que max n'est pas inférieur à min
-    fun validateValues() {
-        if (minNumber > maxNumber) {
-            // Réinitialiser les champs si la validation échoue
-            minValue = ""
-            maxValue = ""
-        }
-    }
 
     Box(
         modifier = Modifier
-            .height(100.dp)
+            .height(90.dp)
+            .padding(bottom = 1.dp)
+            .padding(top = 2.dp)
+            .offset(y = (-5).dp)
             .fillMaxWidth(), // Remplit la taille maximale du parent
         contentAlignment = Alignment.Center // Centre le contenu à l'intérieur du Box
     ) {
@@ -366,15 +403,14 @@ fun MinMaxInputFields() {
                     .width(70.dp) // Largeur fixe pour le chip
                     .height(55.dp) // Hauteur fixe pour le chip
                     .border(1.dp, Color.Blue)
+                    .offset(y = (-10).dp)
                     .padding(1.dp)
             ) {
                 TextField(
-                    value = minValue,
+                    value = minValueState.value?.toString() ?: "",
                     onValueChange = { newValue ->
-                        if (newValue.all { char -> char.isDigit() }) {
-                            minValue = newValue
-                            validateValues()
-                        }
+                        val newMin = newValue.toIntOrNull()
+                        minValueState.value = newMin
                     },
                     textStyle = androidx.compose.ui.text.TextStyle(
                         color = Color.Gray,
@@ -400,15 +436,14 @@ fun MinMaxInputFields() {
                     .width(70.dp) // Largeur fixe pour le chip
                     .height(55.dp) // Hauteur fixe pour le chip
                     .border(1.dp, Color.Blue)
+                    .offset(y = (-10).dp)
                     .padding(1.dp)
             ) {
                 TextField(
-                    value = maxValue,
-                    onValueChange = {
-                        if (it.all { char -> char.isDigit() }) { // Accepter seulement les chiffres
-                            maxValue = it
-                            validateValues()
-                        }
+                    value = maxValueState.value?.toString() ?: "",
+                    onValueChange = { newValue ->
+                        val newMax = newValue.toIntOrNull()
+                        maxValueState.value = newMax
                     },
                     textStyle = androidx.compose.ui.text.TextStyle(
                         color = Color.Gray,
@@ -479,7 +514,10 @@ fun PriceRangeInputFields() {
 
     Box(
         modifier = Modifier
-            .height(100.dp)
+            .height(90.dp)
+            .padding(bottom = 1.dp)
+            .padding(top = 2.dp)
+            .offset(y = (-10).dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
@@ -487,7 +525,7 @@ fun PriceRangeInputFields() {
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
-                .clip(RoundedCornerShape(20)),
+                .clip(RoundedCornerShape(0)),
             horizontalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             // Champ pour le prix minimal
@@ -550,19 +588,72 @@ fun NeighborhoodFilter(onNeighborhoodFilterChanged: (String) -> Unit) {
             neighborhood = newValue
             onNeighborhoodFilterChanged(newValue.trim())
         },
-        placeholder = { Text(text = "1000", fontSize = 13.sp) },
+        placeholder = { Text(text = "Ile de France", fontSize = 13.sp) },
         singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(bottom = 25.dp)
+            .offset(y = (-5).dp)
+            .padding(5.dp),
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent, // Arrière-plan transparent
-            unfocusedIndicatorColor = Color.Gray, // Couleur de la ligne lorsque le TextField n'est pas sélectionné
-            focusedIndicatorColor = Color.Blue // Couleur de la ligne lorsque le TextField est sélectionné
+
         ),
         textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black, fontSize = 16.sp)
     )
 }
+
+@Composable
+fun SearchActionBar(
+    onValidate: () -> Unit,
+    onReset: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        // Bouton pour réinitialiser la recherche
+        ActionButton(
+            text = "Reset",
+            onClick = onReset,
+            backgroundColor = Color.LightGray, // Utilisez une couleur différente pour distinguer le bouton
+            contentColor = Color.Black
+        )
+        // Espace entre les boutons
+        Spacer(modifier = Modifier.width(8.dp))
+        // Bouton pour valider la recherche
+        ActionButton(
+            text = "Validate",
+            onClick = onValidate,
+            backgroundColor = Color.Blue, // Utilisez une couleur différente pour distinguer le bouton
+            contentColor = Color.White
+        )
+    }
+}
+
+@Composable
+fun ActionButton(
+    text: String,
+    onClick: () -> Unit,
+    backgroundColor: Color,
+    contentColor: Color
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(backgroundColor = backgroundColor),
+        modifier = Modifier
+            .height(48.dp)
+
+    ) {
+        Text(
+            text = text,
+            color = contentColor
+        )
+    }
+}
+
 
 
 
