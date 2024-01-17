@@ -22,4 +22,8 @@ interface PhotoDao {
 
     @Query("SELECT * FROM photos WHERE propertyId = :propertyId")
     fun getPicturesForProperty(propertyId: String): LiveData<List<PhotoEntity>>
+
+    @Query("SELECT * FROM photos")
+    suspend fun getAllPhotos(): List<PhotoEntity>
+
 }

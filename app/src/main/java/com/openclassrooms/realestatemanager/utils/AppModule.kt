@@ -15,6 +15,7 @@ import com.openclassrooms.realestatemanager.view.useCase.GetAgentByIdUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetAllPropertiesWithMainPictureUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetPicturesForPropertyUseCase
 import com.openclassrooms.realestatemanager.view.useCase.GetPropertyDetailsWithPictures
+import com.openclassrooms.realestatemanager.view.useCase.SearchUseCase
 import com.openclassrooms.realestatemanager.view.useCase.UpdatePropertyUseCase
 import com.openclassrooms.realestatemanager.view.useCase.UploadImageUseCase
 import dagger.Module
@@ -107,6 +108,13 @@ object AppModule {
     @Provides
     fun providePhotoDao(database: AppDatabase): PhotoDao {
         return database.photoDao()
+    }
+
+    @Provides
+    fun provideSearchUseCase(propertyRepository: PropertyRepository,
+                             pictureRepository: PictureRepository):
+            SearchUseCase {
+        return SearchUseCase(propertyRepository, pictureRepository)
     }
 
 

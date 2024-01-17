@@ -101,5 +101,25 @@ class PictureRepository(
         }
     }
 
+    suspend fun getAllPictures(): List<PhotoDescription> {
+        // Récupération de toutes les photos depuis Room
+        val localPictures = photoDao.getAllPhotos().map { it.toModel() }
+        if (localPictures.isNotEmpty()) {
+            return localPictures
+        }
+
+        // Si aucune photo n'est trouvée localement, récupérer depuis Firebase
+        val querySnapshot = firestore.collection("pictures").get().await()
+        val photos = querySnapshot.documents.mapNotNull { it.toObject<PhotoDescription>() }
+
+        // Stocker les photos récupérées dans Room
+        if (photos.isNotEmpty()) {
+            photoDao.addPhotos(photos.map { it.toEntity() })
+        }
+
+        return photos
+    }
+
+
 
 }

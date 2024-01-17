@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -16,7 +17,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
@@ -55,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -63,11 +64,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.openclassrooms.realestatemanager.viewmodel.PropertyDetailViewModel
+import com.openclassrooms.realestatemanager.viewmodel.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
+@AndroidEntryPoint
 class SearchActivity : ComponentActivity() {
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,12 +91,17 @@ class SearchActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun FilterScreen() {
-    val selectedProximityItems = remember { mutableStateOf(setOf<String>()) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
-    var filterByPhotoCount by remember { mutableStateOf(false) }
+    val searchViewModel: SearchViewModel = hiltViewModel()
     val selectedOptionType = remember { mutableStateOf<String?>(null) }
     val minValue = remember { mutableStateOf<Int?>(null) }
     val maxValue = remember { mutableStateOf<Int?>(null) }
+    val selectedProximityItems = remember { mutableStateOf(setOf<String>()) }
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    val minPrice = remember { mutableStateOf<Int?>(null) }
+    val maxPrice = remember { mutableStateOf<Int?>(null) }
+    var filterByPhotoCount by remember { mutableStateOf(false) }
+    val selectedNeighborhood = remember { mutableStateOf<String?>(null) }
+
     val context = LocalContext.current
 
     Scaffold(
@@ -111,22 +124,58 @@ fun FilterScreen() {
             SearchActionBar(
                 onValidate = {
 
-                    // Supposons que minValue et maxValue soient définis quelque part dans votre FilterScreen
-                    val min = minValue.value ?: 0
-                    val max = maxValue.value ?: Int.MAX_VALUE
+                    // Supposons que minValue, maxValue, minPrice et maxPrice soient définis quelque part dans votre FilterScreen
+                    val minSurface = minValue.value ?: 0
+                    val maxSurface = maxValue.value ?: Int.MAX_VALUE
+                    val minP = minPrice.value ?: 0
+                    val maxP = maxPrice.value ?: Int.MAX_VALUE
 
-                    if (min > max) {
-                        // Affichez une erreur à l'utilisateur, par exemple avec un Toast ou un SnackBar
-                        Toast.makeText(context, "La valeur minimale ne peut pas être supérieure à la valeur maximale.", Toast.LENGTH_LONG).show()
+                    if (minSurface > maxSurface) {
+                        Toast.makeText(context, "La surface minimale ne peut pas être supérieure à la surface maximale.", Toast.LENGTH_LONG).show()
+                    } else if (minP > maxP) {
+                        Toast.makeText(context, "Le prix minimal ne peut pas être supérieur au prix maximal.", Toast.LENGTH_LONG).show()
                     } else {
-                        // Code pour valider la recherche
-                        Log.d("FilterScreen", "Selected option type: ${selectedOptionType.value}")
-                        Log.d("FilterScreen", "Selected option minSurface: ${minValue.value}")
-                        Log.d("FilterScreen", "Selected option maxSurface: ${maxValue.value}")
+                        searchViewModel.performSearch (
+                            selectedOptionType = selectedOptionType.value,
+                            minSurface = minSurface,
+                            maxSurface = maxSurface,
+                            minPrice = minP,
+                            maxPrice = maxP,
+                            proximity = selectedProximityItems.value,
+                            date = selectedDate,
+                            filterByPhotoCount = filterByPhotoCount,
+                            neighborhood = selectedNeighborhood.value
+                        )
+
                     }
+
                 },
                 onReset = {
-                    // Code pour réinitialiser la recherche
+                    // Ici, vous réinitialisez tous les MutableState à leurs valeurs par défaut.
+                    selectedOptionType.value = null
+                    minValue.value = null
+                    maxValue.value = null
+                    minPrice.value = null
+                    maxPrice.value = null
+                    selectedProximityItems.value = setOf()
+                    selectedDate = null
+                    filterByPhotoCount = false
+                    selectedNeighborhood.value = null
+
+                    // Et ensuite, vous pouvez appeler une méthode de recherche dans le ViewModel
+                    // pour obtenir les résultats avec les filtres réinitialisés.
+                    searchViewModel.performSearch(
+                        null,
+                        0,
+                        Int.MAX_VALUE,
+                        0,
+                        Int.MAX_VALUE,
+                        setOf(),
+                        null,
+                        false,
+                        null
+                    )
+
                 }
             )
         }
@@ -148,7 +197,7 @@ fun FilterScreen() {
             Text(
                 text = "Type",
                 style = MaterialTheme.typography.h6.merge(
-                    androidx.compose.ui.text.TextStyle(
+                    TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -168,7 +217,7 @@ fun FilterScreen() {
             Text(
                 text = "Surface (m2)",
                 style = MaterialTheme.typography.h6.merge(
-                    androidx.compose.ui.text.TextStyle(
+                    TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -183,7 +232,7 @@ fun FilterScreen() {
             Text(
                 text = "Proximity",
                 style = MaterialTheme.typography.h6.merge(
-                    androidx.compose.ui.text.TextStyle(
+                    TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -198,7 +247,7 @@ fun FilterScreen() {
             Text(
                 text = "On Market Since",
                 style = MaterialTheme.typography.h6.merge(
-                    androidx.compose.ui.text.TextStyle(
+                    TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -248,7 +297,7 @@ fun FilterScreen() {
             Text(
                 text = "Price (€)",
                 style = MaterialTheme.typography.h6.merge(
-                    androidx.compose.ui.text.TextStyle(
+                    TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -256,7 +305,7 @@ fun FilterScreen() {
                 )
 
             )
-            PriceRangeInputFields()
+            PriceRangeInputFields(minPriceState = minPrice, maxPriceState = maxPrice)
 
             Divider(modifier = Modifier
                 .padding(top = 0.dp)
@@ -267,7 +316,7 @@ fun FilterScreen() {
             Text(
                 text = "Pictures",
                 style = MaterialTheme.typography.h6.merge(
-                    androidx.compose.ui.text.TextStyle(
+                    TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -284,7 +333,7 @@ fun FilterScreen() {
                 Text(
                     text = "At least 3 photos",
                     style = MaterialTheme.typography.h6.merge(
-                        androidx.compose.ui.text.TextStyle(
+                        TextStyle(
                             fontSize = 13.sp,
                             color = Color.Gray
                         )
@@ -303,7 +352,7 @@ fun FilterScreen() {
             Text(
                 text = "Neighborhood",
                 style = MaterialTheme.typography.h6.merge(
-                    androidx.compose.ui.text.TextStyle(
+                    TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -312,7 +361,7 @@ fun FilterScreen() {
 
             )
             NeighborhoodFilter { neighborhood ->
-                // je recupere la valeur de neighborhodd et le donne à vm
+                selectedNeighborhood.value = neighborhood
             }
 
 
@@ -333,20 +382,20 @@ fun FilterChipRow(selectedOption: MutableState<String?>) {
             .fillMaxWidth()
             .padding(top = 15.dp)
     ) {
-        FilterChip(text = "Flat", isSelected = selectedOption.value == "Flat") {
-            selectedOption.value = if (selectedOption.value == "Flat") null else "Flat"
+        FilterChip(text = "flat", isSelected = selectedOption.value == "flat") {
+            selectedOption.value = if (selectedOption.value == "flat") null else "flat"
         }
         Spacer(modifier = Modifier.width(8.dp))
-        FilterChip(text = "Loft", isSelected = selectedOption.value == "Loft") {
-            selectedOption.value = if (selectedOption.value == "Loft") null else "Loft"
+        FilterChip(text = "loft", isSelected = selectedOption.value == "loft") {
+            selectedOption.value = if (selectedOption.value == "loft") null else "loft"
         }
         Spacer(modifier = Modifier.width(8.dp))
-        FilterChip(text = "Duplex", isSelected = selectedOption.value == "Duplex") {
-            selectedOption.value = if (selectedOption.value == "Duplex") null else "Duplex"
+        FilterChip(text = "duplex", isSelected = selectedOption.value == "duplex") {
+            selectedOption.value = if (selectedOption.value == "duplex") null else "duplex"
         }
         Spacer(modifier = Modifier.width(8.dp))
-        FilterChip(text = "House", isSelected = selectedOption.value == "House") {
-            selectedOption.value = if (selectedOption.value == "House") null else "House"
+        FilterChip(text = "house", isSelected = selectedOption.value == "house") {
+            selectedOption.value = if (selectedOption.value == "house") null else "house"
         }
         // Add more chips as needed
     }
@@ -412,7 +461,7 @@ fun MinMaxInputFields(minValueState: MutableState<Int?>,maxValueState: MutableSt
                         val newMin = newValue.toIntOrNull()
                         minValueState.value = newMin
                     },
-                    textStyle = androidx.compose.ui.text.TextStyle(
+                    textStyle = TextStyle(
                         color = Color.Gray,
                         fontSize = 13.sp
                     ),
@@ -445,7 +494,7 @@ fun MinMaxInputFields(minValueState: MutableState<Int?>,maxValueState: MutableSt
                         val newMax = newValue.toIntOrNull()
                         maxValueState.value = newMax
                     },
-                    textStyle = androidx.compose.ui.text.TextStyle(
+                    textStyle = TextStyle(
                         color = Color.Gray,
                         fontSize = 13.sp
                     ),
@@ -498,20 +547,7 @@ fun MultipleFilterChipRow(selectedItems: MutableState<Set<String>>) {
 }
 
 @Composable
-fun PriceRangeInputFields() {
-    var minPrice by remember { mutableStateOf("") }
-    var maxPrice by remember { mutableStateOf("") }
-
-    val minPriceNumber = minPrice.toIntOrNull() ?: 0
-    val maxPriceNumber = maxPrice.toIntOrNull() ?: Int.MAX_VALUE
-
-    fun validatePriceValues() {
-        if (minPriceNumber > maxPriceNumber) {
-            minPrice = ""
-            maxPrice = ""
-        }
-    }
-
+fun PriceRangeInputFields(minPriceState: MutableState<Int?>, maxPriceState: MutableState<Int?>) {
     Box(
         modifier = Modifier
             .height(90.dp)
@@ -529,23 +565,18 @@ fun PriceRangeInputFields() {
             horizontalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             // Champ pour le prix minimal
-            PriceInputField(value = minPrice, onValueChange = {
-                if (it.all { char -> char.isDigit() }) {
-                    minPrice = it
-                    validatePriceValues()
-                }
+            PriceInputField(value = minPriceState.value?.toString() ?: "", onValueChange = { newValue ->
+                minPriceState.value = newValue.toIntOrNull()
             }, placeholder = "Min Price")
 
             // Champ pour le prix maximal
-            PriceInputField(value = maxPrice, onValueChange = {
-                if (it.all { char -> char.isDigit() }) {
-                    maxPrice = it
-                    validatePriceValues()
-                }
+            PriceInputField(value = maxPriceState.value?.toString() ?: "", onValueChange = { newValue ->
+                maxPriceState.value = newValue.toIntOrNull()
             }, placeholder = "Max Price")
         }
     }
 }
+
 
 @Composable
 fun PriceInputField(value: String, onValueChange: (String) -> Unit, placeholder: String) {
@@ -559,7 +590,7 @@ fun PriceInputField(value: String, onValueChange: (String) -> Unit, placeholder:
         TextField(
             value = value,
             onValueChange = onValueChange,
-            textStyle = androidx.compose.ui.text.TextStyle(
+            textStyle = TextStyle(
                 color = Color.Gray,
                 fontSize = 13.sp
             ),
@@ -599,7 +630,7 @@ fun NeighborhoodFilter(onNeighborhoodFilterChanged: (String) -> Unit) {
             backgroundColor = Color.Transparent, // Arrière-plan transparent
 
         ),
-        textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black, fontSize = 16.sp)
+        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp)
     )
 }
 
