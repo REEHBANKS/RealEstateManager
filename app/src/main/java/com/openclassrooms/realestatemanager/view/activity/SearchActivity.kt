@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.view.activity
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
@@ -147,6 +148,10 @@ fun FilterScreen() {
                             neighborhood = selectedNeighborhood.value
                         )
 
+                    }
+
+                    if (context is Activity) {
+                        context.finish()
                     }
 
                 },

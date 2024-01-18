@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.databinding.FragmentListRealEstatePropertyBinding
 import com.openclassrooms.realestatemanager.view.activity.DetailActivity
 import com.openclassrooms.realestatemanager.view.adapter.PropertyAdapter
 import com.openclassrooms.realestatemanager.viewmodel.ListPropertyViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ListPropertyFragment : Fragment() {
@@ -60,6 +62,13 @@ class ListPropertyFragment : Fragment() {
 
         viewModel.propertiesWithMainPicture.observe(viewLifecycleOwner) { properties ->
             adaptor.submitList(properties)
+        }
+
+        // Observer les résultats de recherche du StateFlow
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.propertiesWithPicturesFiltered.observe(viewLifecycleOwner) { propertiesFilters ->
+                adaptor.submitList(propertiesFilters)
+            }
         }
     }
 }

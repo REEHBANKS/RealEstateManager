@@ -22,6 +22,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -111,6 +112,7 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideSearchUseCase(propertyRepository: PropertyRepository,
                              pictureRepository: PictureRepository):
             SearchUseCase {

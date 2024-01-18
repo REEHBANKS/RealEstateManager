@@ -6,14 +6,22 @@ import androidx.annotation.RequiresApi
 import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
 import com.openclassrooms.realestatemanager.data.repository.PictureRepository
 import com.openclassrooms.realestatemanager.data.repository.PropertyRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.UUID
 import javax.inject.Inject
 
 class SearchUseCase @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val pictureRepository: PictureRepository
 ) {
+
+
+    private val _searchResults = MutableStateFlow<List<PropertyModels>>(emptyList())
+    val searchResults: StateFlow<List<PropertyModels>> = _searchResults
+
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun execute(
         selectedOptionType: String?,
@@ -30,7 +38,7 @@ class SearchUseCase @Inject constructor(
         val allProperties = propertyRepository.getAllProperties()
 
         // Apply filtering based on the given parameters and return the results.
-        return allProperties.filter { property ->
+        val filteredProperties = allProperties.filter { property ->
             // Match property type if specified.
             val isTypeMatch = selectedOptionType == null || property.type == selectedOptionType
 
@@ -62,6 +70,12 @@ class SearchUseCase @Inject constructor(
 
             // A property must match all criteria to be included.
             isTypeMatch && isAreaMatch && isPriceMatch && isProximityMatch && isDateMatch && isNeighborhoodMatch && isPhotoCountMatch
+
         }
+
+
+        _searchResults.value = filteredProperties
+        return filteredProperties
+
     }
 }
