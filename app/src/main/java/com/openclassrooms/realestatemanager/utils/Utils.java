@@ -19,9 +19,21 @@ public class Utils {
      * @param dollars
      * @return
      */
+
+
     public static int convertDollarToEuro(int dollars){
         return (int) Math.round(dollars * 0.812);
     }
+
+    public static int convertEuroToDollar(int euros) {
+        double conversionRate = 1.23; // Taux de conversion de l'euro vers le dollar (exemple)
+        return (int) Math.round(euros * conversionRate);
+    }
+
+
+
+
+
 
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié

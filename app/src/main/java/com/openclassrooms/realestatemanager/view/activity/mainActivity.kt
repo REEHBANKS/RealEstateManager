@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         val searchItem = menu?.findItem(R.id.action_search)
         val editToHide = menu?.findItem(R.id.action_edit)
         val addToHide = menu?.findItem(R.id.action_new_add)
+        //val settingsItem= menu?.findItem(R.id.action_setting)
 
         // Masquer certains éléments
         editToHide?.isVisible = false
@@ -88,6 +89,13 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, SearchActivity::class.java)
                 startActivity(intent)
             }
+
+            R.id.action_setting -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+            }
+
+
         }
         return super.onOptionsItemSelected(item)
     }

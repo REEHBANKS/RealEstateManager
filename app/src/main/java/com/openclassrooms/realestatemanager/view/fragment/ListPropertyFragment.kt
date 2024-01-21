@@ -26,7 +26,7 @@ class ListPropertyFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentListRealEstatePropertyBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -60,15 +60,20 @@ class ListPropertyFragment : Fragment() {
         }
 
 
-        viewModel.propertiesWithMainPicture.observe(viewLifecycleOwner) { properties ->
-            adaptor.submitList(properties)
+        // Observer les propriétés avec les prix convertis
+        viewModel.convertedProperties.observe(viewLifecycleOwner) { convertedProperties ->
+            adaptor.submitList(convertedProperties)
         }
 
-        // Observer les résultats de recherche du StateFlow
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.propertiesWithPicturesFiltered.observe(viewLifecycleOwner) { propertiesFilters ->
-                adaptor.submitList(propertiesFilters)
-            }
+        // Observer les résultats de recherche
+        viewModel.propertiesWithPicturesFiltered.observe(viewLifecycleOwner) { propertiesFilters ->
+            adaptor.submitList(propertiesFilters)
+        }
+
+        // Optionnel : Observer le changement de préférence de devise pour mettre à jour l'UI si nécessaire
+        viewModel.isEuro.observe(viewLifecycleOwner) { isEuro ->
+            // Vous pouvez ici mettre à jour l'interface utilisateur en fonction de la préférence de devise
+            // Par exemple, changer le texte d'un label montrant la devise actuelle
         }
     }
 }
