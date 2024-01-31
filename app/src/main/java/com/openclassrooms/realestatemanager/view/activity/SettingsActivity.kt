@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -21,6 +22,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,29 +35,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
 
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.viewmodel.ListPropertyViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SettingsActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+
             androidx.compose.material.MaterialTheme {
                 FilterScreenSettings()
             }
         }
     }
+
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FilterScreenSettings() {
+fun FilterScreenSettings(viewModel: ListPropertyViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val sharedPref = context.getSharedPreferences("CurrencyPreference", Context.MODE_PRIVATE)
 
@@ -78,7 +86,9 @@ fun FilterScreenSettings() {
                         subtitle = if (isEuro) "Euro" else "Dollar",
                         isChecked = isEuro,
                         onCheckedChange = { isEuro = it
+                            Log.d("SettingsActivity", "Switch changé: isEuro = $isEuro")
                             saveCurrencyPreference(it, context)
+                            viewModel.updateCurrencyPreference(it)
                         },
                         iconId = R.drawable.euro_to_dollar
                     )
@@ -156,3 +166,5 @@ fun saveCurrencyPreference(isEuro: Boolean, context: Context) {
 fun DefaultPreviewSettings() {
     FilterScreenSettings()
 }
+
+

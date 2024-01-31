@@ -71,6 +71,7 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
         Log.d("MapDebug", "onViewCreated called")
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
+
         val mapFragment =
             childFragmentManager.findFragmentById(binding.map.id) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -92,8 +93,10 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 @Suppress("UNUSED_EXPRESSION")
+
                 locationResult
                 for (location in locationResult.locations) {
+                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
                     updateMapLocation(location)
                 }
             }

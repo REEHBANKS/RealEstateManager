@@ -62,11 +62,15 @@ class ListPropertyFragment : Fragment() {
 
         // Observer les propriétés avec les prix convertis
         viewModel.convertedProperties.observe(viewLifecycleOwner) { convertedProperties ->
-            adaptor.submitList(convertedProperties)
+            Log.d("ListPropertyFragment", "convertedProperties observé: ${convertedProperties.size} propriétés converties")
+            adaptor.submitList(convertedProperties.toList())
+            adaptor.notifyDataSetChanged()
         }
+
 
         // Observer les résultats de recherche
         viewModel.propertiesWithPicturesFiltered.observe(viewLifecycleOwner) { propertiesFilters ->
+
             adaptor.submitList(propertiesFilters)
         }
 

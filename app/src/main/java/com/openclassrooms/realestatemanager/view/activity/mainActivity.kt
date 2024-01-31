@@ -46,28 +46,31 @@ class MainActivity : AppCompatActivity() {
         val searchItem = menu?.findItem(R.id.action_search)
         val editToHide = menu?.findItem(R.id.action_edit)
         val addToHide = menu?.findItem(R.id.action_new_add)
-        //val settingsItem= menu?.findItem(R.id.action_setting)
+        val settingsItem = menu?.findItem(R.id.action_setting) // Assurez-vous que l'ID correspond à votre item de menu
 
         // Masquer certains éléments
         editToHide?.isVisible = false
         addToHide?.isVisible = false
-        searchItem?.isVisible = false
+
 
         // Récupérer le NavController et l'ID du fragment actuel
         val navController = findNavController(R.id.nav_host_fragment)
         val currentDestinationId = navController.currentDestination?.id
 
-        // Gérer la visibilité de l'élément de recherche
+        // Gérer la visibilité de l'item de settings uniquement dans ListRealEstatePropertyFragment2
+        settingsItem?.isVisible = currentDestinationId == R.id.listRealEstatePropertyFragment2
         searchItem?.isVisible = currentDestinationId == R.id.listRealEstatePropertyFragment2
 
-        // Modifier l'icône de l'élément de basculement entre les fragments
+        // Modifier l'icône de l'élément de basculement entre les fragments si nécessaire
         val switchFragmentItem = menu?.findItem(R.id.action_switch_fragment)
         when (currentDestinationId) {
             R.id.listRealEstatePropertyFragment2 -> switchFragmentItem?.setIcon(R.drawable.baseline_map_24)
             R.id.mapRealEstatePropertyFragment -> switchFragmentItem?.setIcon(R.drawable.baseline_format_list_bulleted_24)
         }
+
         return true
     }
+
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

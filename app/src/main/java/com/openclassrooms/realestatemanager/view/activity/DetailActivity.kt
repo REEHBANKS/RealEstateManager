@@ -135,6 +135,11 @@ class DetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+
+
+
+
         when (item.itemId) {
             R.id.action_new_add -> {
                 val intent = Intent(this, PropertyFormActivity::class.java)
@@ -156,12 +161,14 @@ class DetailActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         super.onPrepareOptionsMenu(menu)
 
-
+        val searchItem = menu?.findItem(R.id.action_search)
+        val settingsItem = menu?.findItem(R.id.action_setting)
         val itemToHide = menu?.findItem(R.id.action_switch_fragment)
 
 
-
+        searchItem?.isVisible = false
         itemToHide?.isVisible = false
+        settingsItem?.isVisible = false
 
         return true
     }
