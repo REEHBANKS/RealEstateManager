@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.view.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -103,7 +105,7 @@ fun FilterScreenSettings(viewModel: ListPropertyViewModel = hiltViewModel()) {
                         // Ajoutez ici la logique de déconnexion de Firebase
                         FirebaseAuth.getInstance().signOut()
                         showDialog = false
-                        // Vous pourriez également naviguer vers l'écran de connexion ici
+
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
                     modifier = Modifier
@@ -111,7 +113,16 @@ fun FilterScreenSettings(viewModel: ListPropertyViewModel = hiltViewModel()) {
                 ) {
                     Text("Déconnexion", color = Color.White)
                 }
-                Button(onClick = { showDialog = false }) {
+                Button(onClick = {
+                    showDialog = false
+                    (context as? Activity)?.finish()
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(intent)
+
+                }
+
+                ) {
                     Text("OK")
                 }
 

@@ -79,6 +79,7 @@ class ListPropertyFragment : Fragment() {
             // Vous pouvez ici mettre à jour l'interface utilisateur en fonction de la préférence de devise
             // Par exemple, changer le texte d'un label montrant la devise actuelle
         }
+
     }
 }
 

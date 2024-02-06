@@ -2,12 +2,12 @@ package com.openclassrooms.realestatemanager.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyWithMainPicture
 import com.openclassrooms.realestatemanager.utils.Utils
@@ -25,51 +25,39 @@ class ListPropertyViewModel @Inject constructor(
     private val searchUseCase: SearchUseCase
 ) : ViewModel() {
 
-    private val _propertiesWithMainPicture = liveData(Dispatchers.IO) {
-        emit(getAllPropertiesWithMainPictureUseCase())
-    }
-    private val propertiesWithMainPicture: LiveData<List<PropertyWithMainPicture>> = _propertiesWithMainPicture
-
     private val _propertiesWithPicturesFiltered = MutableLiveData<List<PropertyWithMainPicture>>()
     val propertiesWithPicturesFiltered: LiveData<List<PropertyWithMainPicture>> = _propertiesWithPicturesFiltered
 
-    private val _isEuro = MutableLiveData<Boolean>()
+    private val _isEuro = MutableLiveData<Boolean>().apply {
+        val sharedPref = context.getSharedPreferences("CurrencyPreference", Context.MODE_PRIVATE)
+        value = sharedPref.getBoolean("isEuro", true)
+    }
+
     val isEuro: LiveData<Boolean> = _isEuro
 
-    private val _convertedProperties = MediatorLiveData<List<PropertyWithMainPicture>>()
-    val convertedProperties: LiveData<List<PropertyWithMainPicture>> = _convertedProperties
+    // LiveData qui contient la liste des propriétés, sans conversion.
+    private val propertiesWithMainPicture: LiveData<List<PropertyWithMainPicture>> = liveData {
+        emit(getAllPropertiesWithMainPictureUseCase())
+    }
 
-    private var originalCurrency: Currency
+    // LiveData qui contient les propriétés converties selon la devise choisie.
+    val convertedProperties: LiveData<List<PropertyWithMainPicture>> = propertiesWithMainPicture.switchMap { properties ->
+        liveData {
+            if (_isEuro.value == true) {
+                emit(properties.map { it.convertToEuro() })
+            } else {
+                emit(properties)
+            }
+        }
+    }
+
+    private fun PropertyWithMainPicture.convertToEuro(): PropertyWithMainPicture =
+        this.copy(property = this.property.copy(price = Utils.convertDollarToEuro(this.property.price)))
+
+    private fun PropertyWithMainPicture.convertToDollar(): PropertyWithMainPicture =
+        this.copy(property = this.property.copy(price = Utils.convertEuroToDollar(this.property.price)))
 
     init {
-        val sharedPref = context.getSharedPreferences("CurrencyPreference", Context.MODE_PRIVATE)
-        val isEuroPref = sharedPref.getBoolean("isEuro", true)
-        _isEuro.value = isEuroPref
-        Log.d("ListPropertyViewModel", "_isEuro mis à jour : $isEuroPref")
-
-        originalCurrency = if (isEuroPref) Currency.EURO else Currency.DOLLAR
-        Log.d("ListPropertyViewModel", "originalCurrency initialisé à : $originalCurrency")
-
-
-        // Ajouter propertiesWithMainPicture comme source pour _convertedProperties
-        _convertedProperties.addSource(propertiesWithMainPicture) { properties ->
-            Log.d("ListPropertyViewModel", "propertiesWithMainPicture: ${properties.size} propriétés chargées")
-            if (properties != null) {
-                _convertedProperties.value = convertPricesIfNeeded(properties, _isEuro.value ?: true)
-            }
-        }
-
-        // Ajouter _isEuro comme source pour _convertedProperties
-        _convertedProperties.addSource(_isEuro) { isEuro ->
-            Log.d("ListPropertyViewModel", "Changement de devise détecté: isEuro = $isEuro")
-            propertiesWithMainPicture.value?.let { properties ->
-                if (properties.isNotEmpty()) {
-                    _convertedProperties.value = convertPricesIfNeeded(properties, isEuro)
-                }
-            }
-        }
-
-        // Réagir aux résultats de recherche
         viewModelScope.launch {
             searchUseCase.searchResults.collect { searchProperties ->
                 if (searchProperties.isNotEmpty()) {
@@ -83,64 +71,25 @@ class ListPropertyViewModel @Inject constructor(
         }
     }
 
-    private fun convertPricesIfNeeded(properties: List<PropertyWithMainPicture>, isEuro: Boolean): List<PropertyWithMainPicture> {
-        Log.d("ListPropertyViewModel", "convertPricesIfNeeded appelée avec isEuro = $isEuro et originalCurrency = $originalCurrency")
-        return when {
-            isEuro && originalCurrency == Currency.DOLLAR -> {
-                Log.d("ListPropertyViewModel", "Conversion Dollar vers Euro")
-                originalCurrency = Currency.EURO
-                properties.map { it.copy(property = it.property.copy(price = Utils.convertDollarToEuro(it.property.price))) }
-            }
-            !isEuro && originalCurrency == Currency.EURO -> {
-                Log.d("ListPropertyViewModel", "Conversion Euro vers Dollar")
-                originalCurrency = Currency.DOLLAR
-                properties.map { it.copy(property = it.property.copy(price = Utils.convertEuroToDollar(it.property.price))) }
-            }
-            else -> {
-                Log.d("ListPropertyViewModel", "Pas de conversion nécessaire")
-                properties
-            }
-        }
-    }
-
-
     fun updateCurrencyPreference(isEuro: Boolean) {
-        Log.d("ListPropertyViewModel", "updateCurrencyPreference appelée avec isEuro = $isEuro")
-
-        if (_isEuro.value != isEuro) {
-            Log.d("ListPropertyViewModel", "Changement détecté. Mise à jour de la préférence de devise.")
-
-            _isEuro.value = isEuro
-            saveCurrencyPreference(isEuro)
-
-            val properties = propertiesWithMainPicture.value
-            if (!properties.isNullOrEmpty()) {
-                val convertedProperties = convertPricesIfNeeded(properties, isEuro)
-                _convertedProperties.value = convertedProperties
-                Log.d("ListPropertyViewModel", "Conversion effectuée : ${convertedProperties.size} propriétés converties.")
-            } else {
-                Log.d("ListPropertyViewModel", "Aucune propriété à convertir.")
-            }
-        } else {
-            Log.d("ListPropertyViewModel", "Aucun changement dans la préférence de devise.")
-        }
-    }
-
-
-
-
-
-    private fun saveCurrencyPreference(isEuro: Boolean) {
         val sharedPref = context.getSharedPreferences("CurrencyPreference", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putBoolean("isEuro", isEuro)
             apply()
         }
+
+        _isEuro.value?.let {
+            if (it != isEuro) {
+                _isEuro.value = isEuro
+                // Force la re-création des données pour le LiveData converti.
+                propertiesWithMainPicture.value?.let { properties ->
+                    _propertiesWithPicturesFiltered.value = if (isEuro) {
+                        properties.map { it.convertToEuro() }
+                    } else {
+                        properties.map { it.convertToDollar() }
+                    }
+                }
+            }
+        }
     }
-
 }
-
-enum class Currency {
-    EURO, DOLLAR
-}
-
