@@ -114,27 +114,26 @@ class ListPropertyFragment : Fragment() {
         binding.propertiesRecyclerView.adapter = adapter
 
 
-        // Observer les propriétés avec les prix convertis
+
         viewModel.convertedProperties.observe(viewLifecycleOwner) { convertedProperties ->
             adapter.submitList(convertedProperties.toList())
             adapter.notifyDataSetChanged()
         }
 
 
-        // Observer les résultats de recherche
         viewModel.propertiesWithPicturesFiltered.observe(viewLifecycleOwner) { propertiesFilters ->
 
             adapter.submitList(propertiesFilters)
         }
 
-        // Optionnel : Observer le changement de préférence de devise pour mettre à jour l'UI si nécessaire
+
         viewModel.isEuro.observe(viewLifecycleOwner) { isEuro ->
             // Pass the currency preference to the adapter
             adapter.updateCurrency(isEuro)
         }
 
         } else {
-            // Le fragment n'est pas attaché à l'activité
+
             Log.d("ListPropertyFragment", "Fragment is not added to the activity.")
         }
 

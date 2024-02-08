@@ -32,7 +32,7 @@ class PropertyFormViewModel @Inject constructor(
     private val _propertyDetails = MutableLiveData<PropertyDetailsWithPictures?>()
     val propertyDetails: MutableLiveData<PropertyDetailsWithPictures?> = _propertyDetails
 
-    // LiveData pour l'URL de l'image téléchargée
+
     private val _imageUploadLiveData = MutableLiveData<String>()
     val imageUploadLiveData: LiveData<String> = _imageUploadLiveData
 

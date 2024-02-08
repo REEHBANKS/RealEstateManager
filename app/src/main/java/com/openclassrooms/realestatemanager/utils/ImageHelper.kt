@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.utils
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-
 class ImageHelper(private val activity: Activity, private val onImageSelected: (Uri) -> Unit) {
 
     fun openGalleryForImage() {
@@ -14,7 +13,7 @@ class ImageHelper(private val activity: Activity, private val onImageSelected: (
     }
 
     fun handleGalleryResult(data: Intent?) {
-        // Vérifiez si plusieurs images ont été sélectionnées ou non
+        // Check if multiple images have been selected or not
         val imageUris = mutableListOf<Uri>()
         val clipData = data?.clipData
         if (clipData != null) {
@@ -29,7 +28,7 @@ class ImageHelper(private val activity: Activity, private val onImageSelected: (
         }
 
 
-        // Passez chaque URI à la fonction onImageSelected
+        // Pass each URI to the onImageSelected function
         imageUris.forEach { imageUri ->
             onImageSelected(imageUri)
         }
@@ -41,3 +40,4 @@ class ImageHelper(private val activity: Activity, private val onImageSelected: (
         const val IMAGE_PICK_CODE = 999
     }
 }
+

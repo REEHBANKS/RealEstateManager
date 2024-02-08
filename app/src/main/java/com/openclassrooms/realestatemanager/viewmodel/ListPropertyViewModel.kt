@@ -35,14 +35,14 @@ class ListPropertyViewModel @Inject constructor(
 
     val isEuro: LiveData<Boolean> = _isEuro
 
-    // LiveData qui contient la liste des propriétés, sans conversion.
+
     private val propertiesWithMainPicture: LiveData<List<PropertyWithMainPicture>> = liveData {
         val isInternetAvailable = Utils.isInternetAvailable(context)
         val properties = getAllPropertiesWithMainPictureUseCase(isInternetAvailable)
         emit(properties)
     }
 
-    // LiveData qui contient les propriétés converties selon la devise choisie.
+
     val convertedProperties: LiveData<List<PropertyWithMainPicture>> = propertiesWithMainPicture.switchMap { properties ->
         liveData {
             if (_isEuro.value == true) {

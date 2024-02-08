@@ -70,7 +70,7 @@ class DetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Initialisation du ViewModel ici garantit qu'il sera prêt avant onCreateView et onViewCreated
+        // Initial du ViewModel  onCreateView et onViewCreated
         viewModel = ViewModelProvider(requireActivity())[PropertyDetailViewModel::class.java]
     }
 
@@ -96,7 +96,7 @@ class DetailFragment : Fragment() {
 
         val apiKey = BuildConfig.API_KEY
 
-        // Extraction des données du Bundle
+        // Extraction
         arguments?.let { bundle ->
             propertyId = bundle.getString("EXTRA_ID") ?: ""
             val type = bundle.getString("EXTRA_TYPE", "")
@@ -121,7 +121,7 @@ class DetailFragment : Fragment() {
             }
             val formattedPrice = format.format(price)
 
-            // Configuration des vues
+            // Config view
             view.findViewById<TextView>(R.id.priceTextView).text = getString(R.string.price_format, formattedPrice)
             view.findViewById<TextView>(R.id.typeDetailPhoneTextView).text = type
             view.findViewById<TextView>(R.id.surfaceDetailPhoneTextView).text = area.toString()
@@ -166,7 +166,7 @@ class DetailFragment : Fragment() {
 
     private fun setupRecyclerView() {
         imagesAdapter = PropertyImagesAdapter(requireContext())
-        // Assurez-vous d'utiliser le layout du fragment pour trouver le RecyclerView
+        //  Be sure to use the fragment layout to find the RecyclerView
         val photosRecyclerView: RecyclerView? = view?.findViewById(R.id.photosRecyclerView)
         if (photosRecyclerView != null) {
             photosRecyclerView.layoutManager =
@@ -178,14 +178,12 @@ class DetailFragment : Fragment() {
     }
 
     private fun observePicturesViewModel() {
-        // Observer les données de l'image depuis le ViewModel
         viewModel.picturesLiveData.observe(viewLifecycleOwner) { pictures ->
             imagesAdapter.submitList(pictures)
         }
     }
 
     private fun observeAgentViewModel() {
-        // Observer les données de l'agent depuis le ViewModel
         viewModel.agentLiveData.observe(viewLifecycleOwner) { agent ->
             if (agent != null) {
                 view?.findViewById<TextView>(R.id.agentNameTextView)?.text = agent.agentName

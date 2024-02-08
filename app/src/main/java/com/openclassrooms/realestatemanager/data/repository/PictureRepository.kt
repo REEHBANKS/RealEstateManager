@@ -11,20 +11,19 @@ import com.openclassrooms.realestatemanager.data.models.modelRoom.toModel
 import kotlinx.coroutines.tasks.await
 import java.io.InputStream
 import java.util.UUID
-
 class PictureRepository(
     private val firestore: FirebaseFirestore,
     private val photoDao: PhotoDao
 ) {
 
     suspend fun getMainPictureForProperty(propertyId: String): PhotoDescription? {
-        // Vérifier d'abord dans Room
+        // Check first in Room
         val localMainPicture = photoDao.getMainPictureForProperty(propertyId)?.toModel()
         if (localMainPicture != null) {
             return localMainPicture
         }
 
-        // Si non disponible localement, récupérer depuis Firebase
+        // If not available locally, retrieve from Firebase
         val querySnapshot = firestore.collection("pictures")
             .whereEqualTo("propertyId", propertyId)
             .whereEqualTo("isMain", true)
@@ -33,7 +32,7 @@ class PictureRepository(
 
         val photoDescription = querySnapshot.documents.firstOrNull()?.toObject<PhotoDescription>()
 
-        // Stocker dans Room si la photo est récupérée de Firebase
+        // Store in Room if photo is retrieved from Firebase
         photoDescription?.let { photoDao.addPhoto(it.toEntity()) }
 
         return photoDescription
@@ -41,20 +40,20 @@ class PictureRepository(
 
 
     suspend fun getPicturesForProperty(propertyId: String): List<PhotoDescription> {
-        // Vérifier d'abord dans Room
+        // Check first in Room
         val localPictures = photoDao.getPicturesForProperty(propertyId).value?.map { it.toModel() }
-        if (localPictures != null && localPictures.isNotEmpty()) {
+        if (!localPictures.isNullOrEmpty()) {
             return localPictures
         }
 
-        // Si non disponible localement, récupérer depuis Firebase
+        // If not available locally, retrieve from Firebase
         val querySnapshot = firestore.collection("pictures")
             .whereEqualTo("propertyId", propertyId)
             .get().await()
 
         val photos = querySnapshot.documents.mapNotNull { it.toObject<PhotoDescription>() }
 
-        // Stocker dans Room si les photos sont récupérées de Firebase
+        // Store in Room if photos are retrieved from Firebase
         photoDao.addPhotos(photos.map { it.toEntity() })
 
         return photos
@@ -63,7 +62,7 @@ class PictureRepository(
 
     suspend fun addPhotos(photos: List<PhotoDescription>): Boolean {
         return try {
-            // Ajouter les photos à Firebase
+            // Add photos to Firebase
             val batch = firestore.batch()
             photos.forEach { photo ->
                 val photoRef = firestore.collection("pictures").document()
@@ -78,7 +77,7 @@ class PictureRepository(
             }
             batch.commit().await()
 
-            // Ajouter les mêmes photos dans Room
+            // Add the same photos in Room
             val photoEntities = photos.map { it.toEntity() }
             photoDao.addPhotos(photoEntities)
 
@@ -102,24 +101,21 @@ class PictureRepository(
     }
 
     suspend fun getAllPictures(): List<PhotoDescription> {
-        // Récupération de toutes les photos depuis Room
+        // Retrieving all photos from Room
         val localPictures = photoDao.getAllPhotos().map { it.toModel() }
         if (localPictures.isNotEmpty()) {
             return localPictures
         }
 
-        // Si aucune photo n'est trouvée localement, récupérer depuis Firebase
+        // If no photos found locally, retrieve from Firebase
         val querySnapshot = firestore.collection("pictures").get().await()
         val photos = querySnapshot.documents.mapNotNull { it.toObject<PhotoDescription>() }
 
-        // Stocker les photos récupérées dans Room
+        // Store retrieved photos in Room
         if (photos.isNotEmpty()) {
             photoDao.addPhotos(photos.map { it.toEntity() })
         }
 
         return photos
     }
-
-
-
 }

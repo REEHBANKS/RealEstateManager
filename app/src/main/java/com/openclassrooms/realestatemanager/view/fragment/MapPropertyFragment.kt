@@ -26,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
@@ -58,7 +59,7 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("MapDebug", "onCreateView called")
+
         _binding = FragmentMapRealEstatePropertyBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -68,7 +69,6 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         observeProperties()
-        Log.d("MapDebug", "onViewCreated called")
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
 
@@ -105,16 +105,19 @@ class MapPropertyFragment : Fragment(), OnMapReadyCallback {
 
     private fun updateMapLocation(location: Location) {
         if (lastUpdatedLocation == null || location.distanceTo(lastUpdatedLocation!!) > MIN_DISTANCE_FOR_UPDATE) {
-            Log.d("MapDebug", "Location updated: ${location.latitude}, ${location.longitude}")
             val currentLatLng = LatLng(location.latitude, location.longitude)
-            map.addMarker(MarkerOptions().position(currentLatLng).title("Ma Position"))
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 17f))
+            // Change the marker icon here
+            map.addMarker(MarkerOptions()
+                .position(currentLatLng)
+                .title("My Position")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 13f))
             lastUpdatedLocation = location
         }
     }
 
+
     override fun onMapReady(googleMap: GoogleMap) {
-        Log.d("MapDebug", "onMapReady called")
         map = googleMap
         map.setOnMarkerClickListener { marker ->
             val property = marker.tag as? PropertyModels

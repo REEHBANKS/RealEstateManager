@@ -29,7 +29,7 @@ class ConnexionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_connexion)
 
         if (FirebaseAuth.getInstance().currentUser != null) {
-            // L'utilisateur est déjà connecté, lancer l'activité principale directement
+
             startMainActivity()
         }
 

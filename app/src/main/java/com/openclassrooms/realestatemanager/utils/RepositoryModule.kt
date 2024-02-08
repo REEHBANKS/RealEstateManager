@@ -37,7 +37,7 @@ object RepositoryModule {
         return AgentRepository(firestore)
     }
 
-    // Fournir FirebaseFirestore si nécessaire
+
     @Provides
     fun provideFirebaseFirestore(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()

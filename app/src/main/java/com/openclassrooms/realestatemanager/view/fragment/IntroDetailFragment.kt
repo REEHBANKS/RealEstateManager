@@ -22,7 +22,6 @@ class IntroDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Gonfle la mise en page pour ce fragment
         return inflater.inflate(R.layout.fragment_intro_detail, container, false)
     }
 }

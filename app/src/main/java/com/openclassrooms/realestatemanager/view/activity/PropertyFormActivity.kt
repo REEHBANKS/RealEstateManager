@@ -213,19 +213,19 @@ class PropertyFormActivity : AppCompatActivity() {
 
 
                 AUTOCOMPLETE_REQUEST_CODE -> {
-                    // Quand un lieu est sélectionné à partir des résultats de l'autocomplete
+
                     val place = Autocomplete.getPlaceFromIntent(data!!)
-                    // Mettre à jour le champ d'adresse avec le nom du lieu sélectionné
+
                     findViewById<AutoCompleteTextView>(R.id.autoCompleteTextViewAddress).setText(
                         place.name
                     )
-                    // Stocker la latitude et la longitude pour une utilisation ultérieure
+
                     selectedLatLng = place.latLng!!
                 }
-                // Vous pouvez ajouter d'autres cas pour d'autres `requestCode` si nécessaire
+
             }
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR && data != null) {
-            // Gérer les erreurs pour l'activité d'autocomplete
+
             val status = Autocomplete.getStatusFromIntent(data)
             Log.i("PropertyFormActivity", status.statusMessage ?: "Error occurred")
         }
@@ -243,17 +243,17 @@ class PropertyFormActivity : AppCompatActivity() {
 
     private fun observeImageUploadViewModel() {
         viewModel.imageUploadLiveData.observe(this) { downloadUrl ->
-            // Utiliser l'URL pour mettre à jour l'interface utilisateur ou pour la stocker dans PhotoDescription
+            // Use the URL to update the user interface or store it in PhotoDescription
             photoDetailsHelper.promptForPhotoCaption(this) { caption, isMainPhoto ->
                 val photoDescription = PhotoDescription(
                     id = UUID.randomUUID().toString(),
-                    propertyId = "", // Vous devez définir cela après avoir ajouté la propriété
-                    uri = downloadUrl, // Ici, utilisez l'URL de téléchargement
+                    propertyId = "",
+                    uri = downloadUrl,
                     description = caption,
                     isMain = isMainPhoto
                 )
                 photos.add(photoDescription)
-                // Mettre à jour RecyclerView ou toute autre vue que vous utilisez pour afficher les images
+                // Update RecyclerView or any other view you use to display images
                 updateRecyclerViewWithNewPhoto(photoDescription)
             }
         }
@@ -351,15 +351,14 @@ class PropertyFormActivity : AppCompatActivity() {
         val switchSold = findViewById<SwitchMaterial>(R.id.switchSold)
         val editTextSaleDate = findViewById<EditText>(R.id.editTextSaleDate)
 
-        // Configurer la visibilité initiale de editTextSaleDate ici, basée sur l'état actuel du switch
+        // Set the initial visibility of editTextSaleDate here, based on the current state of the switch
         editTextSaleDate.visibility = if (switchSold.isChecked) View.VISIBLE else View.GONE
 
-        // Configurer l'écouteur pour le changement d'état du switch
+        // Configuring the listener for switch status change
         switchSold.setOnCheckedChangeListener { _, isChecked ->
             // Modifier la visibilité de editTextSaleDate quand l'état du switch change
             editTextSaleDate.visibility = if (isChecked) View.VISIBLE else View.GONE
 
-            // S'il est activé, afficher également le DatePickerDialog
             if (isChecked) {
                 showDatePicker(editTextSaleDate)
             }
@@ -398,9 +397,9 @@ class PropertyFormActivity : AppCompatActivity() {
 
         return if (isSold && dateString.isNotBlank()) {
             try {
-                dateFormat.parse(dateString) // Convertit la chaîne de caractères en Date
+                dateFormat.parse(dateString)
             } catch (e: ParseException) {
-                null // Retourner null si la chaîne ne peut pas être analysée
+                null
             }
         } else {
             null
@@ -499,12 +498,10 @@ class PropertyFormActivity : AppCompatActivity() {
                 }
 
                 null -> {
-                    // Gérer le cas où status est null, si nécessaire
                     Toast.makeText(this, "Operation status is undefined", Toast.LENGTH_LONG).show()
                 }
 
                 else -> {
-                    // Cela couvrira tout autre cas non spécifié, y compris null
                     Toast.makeText(this, "Unexpected status", Toast.LENGTH_LONG).show()
                 }
             }

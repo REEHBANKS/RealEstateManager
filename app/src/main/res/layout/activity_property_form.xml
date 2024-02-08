@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Container pour l'en-tête avec ombre et arrondi -->
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewTitle"
             android:layout_width="300dp"
@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Icône de la maison -->
+
             <ImageView
                 android:id="@+id/imageViewHouseIcon"
                 android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
                 android:layout_marginStart="16dp"
                 android:src="@drawable/baseline_house_white_24" />
 
-            <!-- Titre du formulaire -->
+
             <TextView
                 android:id="@+id/tvPropertyForm"
                 android:layout_width="wrap_content"

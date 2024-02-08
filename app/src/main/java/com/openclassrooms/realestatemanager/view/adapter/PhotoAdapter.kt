@@ -16,7 +16,7 @@ class PhotoAdapter(private var photos: MutableList<PhotoDescription>) :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        // Utiliser le ViewBinding pour infler la vue
+
         Log.d("RENEL", "onCreateViewHolder called")
 
         val binding = PhotoDetailItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,7 +24,7 @@ class PhotoAdapter(private var photos: MutableList<PhotoDescription>) :
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        // Passer l'objet photoDescription au ViewHolder
+
         Log.d("RENEL", "onBindViewHolder called for position $position")
         val photoDescription = photos[position]
 

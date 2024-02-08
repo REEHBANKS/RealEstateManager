@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
-
 @Suppress("DEPRECATION")
 class PropertyRepository(
     private val firestore: FirebaseFirestore,
@@ -25,17 +24,17 @@ class PropertyRepository(
         var newPropertyId: String? = null
 
         try {
-            // Ajout à Firebase
+            // Adding to Firebase
             val newPropertyRef = firestore.collection("properties").document()
             newPropertyId = newPropertyRef.id
             val newProperty = property.copy(id = newPropertyId)
             newPropertyRef.set(newProperty).await()
 
-            // Conversion et stockage dans Room
+            // Conversion and storage in Room
             val propertyEntity = newProperty.toEntity()
             propertyDao.addProperty(propertyEntity)
         } catch (e: Exception) {
-            // Gérer l'exception si nécessaire
+            // Handle exception if necessary
         }
 
         return newPropertyId
@@ -43,17 +42,17 @@ class PropertyRepository(
 
     suspend fun updateProperty(propertyId: String, updatedProperty: PropertyModels): Boolean {
         return try {
-            // Mise à jour dans Firebase
+            // Updating in Firebase
             val propertyToUpdate = updatedProperty.copy(id = propertyId)
             firestore.collection("properties").document(propertyId).set(propertyToUpdate).await()
 
-            // Mise à jour dans Room
+            // Updating in Room
             val propertyEntity = propertyToUpdate.toEntity()
             propertyDao.updateProperty(propertyEntity)
 
-            true // Retourner true si la mise à jour est réussie
+            true // Return true if update is successful
         } catch (e: Exception) {
-            false // Retourner false en cas d'échec
+            false // Return false in case of failure
         }
     }
 
@@ -61,12 +60,12 @@ class PropertyRepository(
     suspend fun getAllProperties(isInternetAvailable: Boolean): List<PropertyModels> {
         Log.d("PropertyRepository", "Fetching properties...")
 
-        // Vérifier d'abord la connexion réseau
+        // Check network connectivity first
         if (isInternetAvailable) {
             val querySnapshot = firestore.collection("properties").get().await()
             val propertiesFromFirebase = querySnapshot.documents.mapNotNull { it.toObject<PropertyModels>() }
 
-            // Récupérer les propriétés locales
+            // Get local properties
             val localProperties = withContext(Dispatchers.IO) {
                 propertyDao.getAllProperties().asFlow().firstOrNull()
             }?.map { it.toModel() }
@@ -75,7 +74,7 @@ class PropertyRepository(
                 Log.d("PropertyRepository", "Fetched properties from Firestore: ${propertiesFromFirebase.size}")
 
                 withContext(Dispatchers.IO) {
-                    // Ajouter les propriétés de Firebase dans Room s'il y a des différences
+                    // Add Firebase properties to Room if there are differences
                     val propertiesToAdd = propertiesFromFirebase.filterNot { localProperties?.contains(it) == true }
                     if (propertiesToAdd.isNotEmpty()) {
                         propertyDao.addProperties(propertiesToAdd.map { it.toEntity() })
@@ -93,7 +92,7 @@ class PropertyRepository(
             Log.d("PropertyRepository", "Network is not available. Returning local properties.")
         }
 
-        // Récupérer les propriétés locales si la connexion n'est pas disponible
+        // Get local properties if connection is not available
         val localProperties = withContext(Dispatchers.IO) {
             propertyDao.getAllProperties().asFlow().firstOrNull()
         }?.map { it.toModel() }
@@ -104,17 +103,17 @@ class PropertyRepository(
 
 
     suspend fun getPropertyById(id: String): PropertyModels? {
-        // Vérifier d'abord dans Room
+        // Check first in Room
         val localProperty = propertyDao.getPropertyById(id)?.toModel()
         if (localProperty != null) {
             return localProperty
         }
 
-        // Si non disponible localement, récupérer depuis Firebase
+        // If not available locally, retrieve from Firebase
         val documentSnapshot = firestore.collection("properties").document(id).get().await()
         val property = documentSnapshot.toObject<PropertyModels>()
 
-        // Stocker dans Room si la propriété est récupérée de Firebase
+        // Store in Room if property is retrieved from Firebase
         property?.let { propertyDao.addProperty(it.toEntity()) }
 
         return property

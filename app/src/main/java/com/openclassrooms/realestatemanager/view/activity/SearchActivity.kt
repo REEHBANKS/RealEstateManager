@@ -125,7 +125,6 @@ fun FilterScreen() {
             SearchActionBar(
                 onValidate = {
 
-                    // Supposons que minValue, maxValue, minPrice et maxPrice soient définis quelque part dans votre FilterScreen
                     val minSurface = minValue.value ?: 0
                     val maxSurface = maxValue.value ?: Int.MAX_VALUE
                     val minP = minPrice.value ?: 0
@@ -156,7 +155,6 @@ fun FilterScreen() {
 
                 },
                 onReset = {
-                    // Ici, vous réinitialisez tous les MutableState à leurs valeurs par défaut.
                     selectedOptionType.value = null
                     minValue.value = null
                     maxValue.value = null
@@ -167,8 +165,7 @@ fun FilterScreen() {
                     filterByPhotoCount = false
                     selectedNeighborhood.value = null
 
-                    // Et ensuite, vous pouvez appeler une méthode de recherche dans le ViewModel
-                    // pour obtenir les résultats avec les filtres réinitialisés.
+
                     searchViewModel.performSearch(
                         null,
                         0,
@@ -270,7 +267,7 @@ fun FilterScreen() {
                         val datePickerDialog = DatePickerDialog(
                             context,
                             { _, year, monthOfYear, dayOfMonth ->
-                                // Mise à jour de la date sélectionnée
+
                                 selectedDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
                             },
                             LocalDate.now().year, // Année actuelle
@@ -440,22 +437,22 @@ fun MinMaxInputFields(minValueState: MutableState<Int?>,maxValueState: MutableSt
             .padding(bottom = 1.dp)
             .padding(top = 2.dp)
             .offset(y = (-5).dp)
-            .fillMaxWidth(), // Remplit la taille maximale du parent
-        contentAlignment = Alignment.Center // Centre le contenu à l'intérieur du Box
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
     ) {
 
         Row(
             modifier = Modifier
                 .background(Color.White)
                 .padding(16.dp)
-                .clip(RoundedCornerShape(20)), // Coins arrondis pour un look de chip,
+                .clip(RoundedCornerShape(20)),
             horizontalArrangement = Arrangement.spacedBy(25.dp)
         ) {
-            // Champ pour la valeur minimale
+
             Box(
                 modifier = Modifier
-                    .width(70.dp) // Largeur fixe pour le chip
-                    .height(55.dp) // Hauteur fixe pour le chip
+                    .width(70.dp)
+                    .height(55.dp)
                     .border(1.dp, Color.Blue)
                     .offset(y = (-10).dp)
                     .padding(1.dp)
@@ -474,17 +471,16 @@ fun MinMaxInputFields(minValueState: MutableState<Int?>,maxValueState: MutableSt
                     singleLine = true,
                     modifier = Modifier.width(120.dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent, // Pour un arrière-plan transparent
-                        unfocusedIndicatorColor = Color.Transparent, // Pas de ligne en dessous quand il n'est pas focus
+                        backgroundColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent
                     ),
-                    // Supprimez le padding par défaut du TextField pour plus d'espace
                     visualTransformation = VisualTransformation.None,
                     maxLines = 1
                 )
 
             }
-            // Champ pour la valeur maximale
+
             Box(
                 modifier = Modifier
                     .width(70.dp) // Largeur fixe pour le chip
@@ -507,8 +503,8 @@ fun MinMaxInputFields(minValueState: MutableState<Int?>,maxValueState: MutableSt
                     singleLine = true,
                     modifier = Modifier.width(120.dp),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent, // Pour un arrière-plan transparent
-                        unfocusedIndicatorColor = Color.Transparent, // Pas de ligne en dessous quand il n'est pas focus
+                        backgroundColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent
                     ),
                     // Supprimez le padding par défaut du TextField pour plus d'espace
@@ -528,15 +524,15 @@ fun MultipleFilterChipRow(selectedItems: MutableState<Set<String>>) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 15.dp) // Ajouter de l'espace entre le texte "Proximity" et la Row
+            .padding(top = 15.dp)
     ) {
-        // Créez un FilterChip pour chaque label
+
         chipLabels.forEach { label ->
             FilterChip(
                 text = label,
                 isSelected = selectedItems.value.contains(label),
                 onSelected = {
-                    // Mise à jour de l'état de sélection
+
                     val currentSelection = selectedItems.value.toMutableSet()
                     if (currentSelection.contains(label)) {
                         currentSelection.remove(label)
@@ -650,16 +646,16 @@ fun SearchActionBar(
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Bouton pour réinitialiser la recherche
+        // Search reset button
         ActionButton(
             text = "Reset",
             onClick = onReset,
             backgroundColor = Color.LightGray, // Utilisez une couleur différente pour distinguer le bouton
             contentColor = Color.Black
         )
-        // Espace entre les boutons
+        // Search reset button
         Spacer(modifier = Modifier.width(8.dp))
-        // Bouton pour valider la recherche
+
         ActionButton(
             text = "Validate",
             onClick = onValidate,
