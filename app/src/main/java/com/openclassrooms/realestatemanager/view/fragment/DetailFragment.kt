@@ -1,7 +1,7 @@
 package com.openclassrooms.realestatemanager.view.fragment
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.view.activity.MainActivity
 import com.openclassrooms.realestatemanager.view.adapter.PropertyImagesAdapter
 import com.openclassrooms.realestatemanager.viewmodel.PropertyDetailViewModel
 import java.text.NumberFormat
@@ -67,6 +68,11 @@ class DetailFragment : Fragment() {
     private lateinit var viewModel: PropertyDetailViewModel
     private lateinit var imagesAdapter: PropertyImagesAdapter
     private var propertyId: String = ""
+
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,7 +168,11 @@ class DetailFragment : Fragment() {
             // Get Agent
             viewModel.getOneAgentWithId(agentId)
         }
+
+
     }
+
+
 
     private fun setupRecyclerView() {
         imagesAdapter = PropertyImagesAdapter(requireContext())

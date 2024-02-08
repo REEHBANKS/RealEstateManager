@@ -2,15 +2,15 @@ package com.openclassrooms.realestatemanager.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
+import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.databinding.ActivityMainBinding
+import com.openclassrooms.realestatemanager.view.fragment.DetailFragment
 import com.openclassrooms.realestatemanager.view.fragment.IntroDetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,6 +19,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var isTabletMode: Boolean = false
+    private var currentPropertyId: String? = null
+    private var isDetailFragmentVisible = false
+
+
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +39,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
     fun isTabletMode(): Boolean {
         return isTabletMode
     }
@@ -45,6 +53,8 @@ class MainActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         super.onPrepareOptionsMenu(menu)
 
+
+
         // get elements
         val searchItem = menu?.findItem(R.id.action_search)
         val editToHide = menu?.findItem(R.id.action_edit)
@@ -52,8 +62,18 @@ class MainActivity : AppCompatActivity() {
         val settingsItem = menu?.findItem(R.id.action_setting) // Assurez-vous que l'ID correspond à votre item de menu
 
 
-        editToHide?.isVisible = false
-        addToHide?.isVisible = false
+        val isTablet = isTabletMode()
+
+        if (isTablet) {
+            editToHide?.isVisible = true
+            addToHide?.isVisible = true
+
+        }else {
+            editToHide?.isVisible = false
+            addToHide?.isVisible = false
+        }
+
+
 
 
         // Get  NavController
@@ -99,6 +119,26 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
             }
+
+            R.id.action_new_add -> {
+                val intent = Intent(this, PropertyFormActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
+
+            R.id.action_edit -> {
+                currentPropertyId?.let {
+                    if(isDetailFragmentVisible) {
+                        val intent = Intent(this, PropertyFormActivity::class.java)
+                        intent.putExtra("property_id", it)
+                        intent.putExtra("mode", "edit")
+                        startActivity(intent)
+                    }
+                }
+                return true
+            }
+
 
 
         }

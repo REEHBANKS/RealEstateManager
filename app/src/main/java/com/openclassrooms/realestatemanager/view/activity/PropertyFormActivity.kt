@@ -314,7 +314,7 @@ class PropertyFormActivity : AppCompatActivity() {
     }
 
     private fun showNearbyOptionsDialog() {
-        // Les options à afficher dans le dialogue
+
         val nearbyOptions = arrayOf("schools", "shops", "parks", "station")
 
         val checkedOptions = BooleanArray(nearbyOptions.size)

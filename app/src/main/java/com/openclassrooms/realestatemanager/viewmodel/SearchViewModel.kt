@@ -41,7 +41,7 @@ class SearchViewModel @Inject constructor (
         filterByPhotoCount: Boolean,
         neighborhood: String?
     ) {
-        Log.d("SearchViewModel", "performSearch called with params: ...")
+
         viewModelScope.launch {
             val results = searchUseCase.execute(
                 selectedOptionType,

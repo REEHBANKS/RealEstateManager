@@ -11,9 +11,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,66 +74,76 @@ fun FilterScreenSettings(viewModel: ListPropertyViewModel = hiltViewModel()) {
     val sharedPref = context.getSharedPreferences("CurrencyPreference", Context.MODE_PRIVATE)
 
     // Lire l'état actuel de la devise à partir des SharedPreferences
-    val savedIsEuro = sharedPref.getBoolean("isEuro", true)
+    val savedIsEuro = sharedPref.getBoolean("isEuro", false)
     var isEuro by remember { mutableStateOf(savedIsEuro) }
     var showDialog by remember { mutableStateOf(true) }
 
-
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                showDialog = false
-            },
-            title = { Text("Settings") },
-            text = {
-                Column {
-                    SwitchSettingItem(
-                        title = "Currency",
-                        subtitle = if (isEuro) "Euro" else "Dollar",
-                        isChecked = isEuro,
-                        onCheckedChange = { isEuro = it
-                            Log.d("SettingsActivity", "Switch changé: isEuro = $isEuro")
-                            saveCurrencyPreference(it, context)
-                            viewModel.updateCurrencyPreference(it)
-                        },
-                        iconId = R.drawable.euro_to_dollar
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                }
-            },
-            confirmButton = {
-
-                Button(
-                    onClick = {
-                        // Ajoutez ici la logique de déconnexion de Firebase
-                        FirebaseAuth.getInstance().signOut()
+    MaterialTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize() // Assurez-vous de remplir tout l'écran
+                .background(Color.LightGray)
+        ) {
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = {
                         showDialog = false
-
                     },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
-                    modifier = Modifier
-                        .padding(end = 120.dp)
-                ) {
-                    Text("Déconnexion", color = Color.White)
-                }
-                Button(onClick = {
-                    showDialog = false
-                    (context as? Activity)?.finish()
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    context.startActivity(intent)
+                    title = { Text("Settings") },
+                    text = {
+                        Column {
+                            SwitchSettingItem(
+                                title = "Currency",
+                                subtitle = if (isEuro) "Euro" else "Dollar",
+                                isChecked = isEuro,
+                                onCheckedChange = {
+                                    isEuro = it
+                                    saveCurrencyPreference(it, context)
+                                    viewModel.updateCurrencyPreference(it)
+                                },
+                                iconId = R.drawable.euro_to_dollar
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
 
-                }
+                        }
+                    },
+                    confirmButton = {
 
-                ) {
-                    Text("OK")
-                }
+                        Button(
+                            onClick = {
+                                FirebaseAuth.getInstance().signOut()
+                                showDialog = false
 
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                            modifier = Modifier
+                                .padding(end = 120.dp)
+                        ) {
+                            Text("Déconnexion", color = Color.White)
+                        }
+                        Button(onClick = {
+                            showDialog = false
+                            (context as? Activity)?.finish()
+                            val intent = Intent(context, MainActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(intent)
+
+                        }
+
+                        ) {
+                            Text("OK")
+                        }
+
+                    }
+                )
             }
-        )
+
+        }
     }
+
 }
+
 
 @Composable
 fun SwitchSettingItem(

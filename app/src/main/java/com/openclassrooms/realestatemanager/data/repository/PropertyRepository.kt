@@ -58,47 +58,41 @@ class PropertyRepository(
 
 
     suspend fun getAllProperties(isInternetAvailable: Boolean): List<PropertyModels> {
-        Log.d("PropertyRepository", "Fetching properties...")
-
-        // Check network connectivity first
+        // If internet is available, try fetching properties from Firestore
         if (isInternetAvailable) {
             val querySnapshot = firestore.collection("properties").get().await()
             val propertiesFromFirebase = querySnapshot.documents.mapNotNull { it.toObject<PropertyModels>() }
 
-            // Get local properties
+            // Fetch local properties from Room database
             val localProperties = withContext(Dispatchers.IO) {
                 propertyDao.getAllProperties().asFlow().firstOrNull()
             }?.map { it.toModel() }
 
+            // If properties are fetched from Firestore, compare with local and add any new ones to Room
             if (propertiesFromFirebase.isNotEmpty()) {
-                Log.d("PropertyRepository", "Fetched properties from Firestore: ${propertiesFromFirebase.size}")
-
                 withContext(Dispatchers.IO) {
-                    // Add Firebase properties to Room if there are differences
                     val propertiesToAdd = propertiesFromFirebase.filterNot { localProperties?.contains(it) == true }
                     if (propertiesToAdd.isNotEmpty()) {
                         propertyDao.addProperties(propertiesToAdd.map { it.toEntity() })
                     }
                 }
-
                 return propertiesFromFirebase
             } else if (!localProperties.isNullOrEmpty()) {
-                Log.d("PropertyRepository", "No properties found in Firestore. Returning local properties.")
+                // If no properties are found in Firestore, return the local ones
                 return localProperties
-            } else {
-                Log.d("PropertyRepository", "No properties found in Firestore or Room.")
             }
-        } else {
-            Log.d("PropertyRepository", "Network is not available. Returning local properties.")
         }
 
-        // Get local properties if connection is not available
+        // If the network is not available, return properties from the local database
         val localProperties = withContext(Dispatchers.IO) {
             propertyDao.getAllProperties().asFlow().firstOrNull()
         }?.map { it.toModel() }
 
+        // Return the local properties or an empty list if no properties are available
         return localProperties ?: emptyList()
     }
+
+
 
 
 

@@ -56,11 +56,13 @@ public class Utils {
      * @return
      */
     public static Boolean isInternetAvailable(Context context){
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo mobileNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-        return (wifiNetworkInfo != null && wifiNetworkInfo.isConnected()) || (mobileNetworkInfo != null && mobileNetworkInfo.isConnected());
+        return (wifiNetworkInfo != null && wifiNetworkInfo.isConnectedOrConnecting()) ||
+                (mobileNetworkInfo != null && mobileNetworkInfo.isConnectedOrConnecting());
     }
 
 

@@ -116,7 +116,7 @@ fun FilterScreen() {
                     }
                 },
                 actions = {
-                    // If you have any actions, they go here.
+
                 }
             )
 
@@ -209,8 +209,7 @@ fun FilterScreen() {
             )
 
 
-            // Chip row for property types
-            // Here you should place your FilterChip composable
+
             FilterChipRow(selectedOption = selectedOptionType)
 
 
@@ -289,7 +288,6 @@ fun FilterScreen() {
                 }
             }
 
-            // Affichage de la date sélectionnée
             selectedDate?.let {
                 Text("Selected date: ${it.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}")
             }
@@ -377,7 +375,7 @@ fun FilterScreen() {
 @Composable
 fun FilterChipRow(selectedOption: MutableState<String?>) {
 
-    // This is just a placeholder for your chip layout logic
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -399,7 +397,6 @@ fun FilterChipRow(selectedOption: MutableState<String?>) {
         FilterChip(text = "house", isSelected = selectedOption.value == "house") {
             selectedOption.value = if (selectedOption.value == "house") null else "house"
         }
-        // Add more chips as needed
     }
 }
 
@@ -407,10 +404,10 @@ fun FilterChipRow(selectedOption: MutableState<String?>) {
 fun FilterChip(text: String, isSelected: Boolean, onSelected: () -> Unit) {
     Surface(
         modifier = Modifier
-            .width(70.dp) // Largeur fixe pour le chip
-            .height(35.dp) // Hauteur fixe pour le chip
-            .clip(RoundedCornerShape(20)) // Coins arrondis pour un look de chip
-            .clickable(onClick = onSelected), // Rend le chip cliquable
+            .width(70.dp)
+            .height(35.dp)
+            .clip(RoundedCornerShape(20))
+            .clickable(onClick = onSelected),
         color = if (isSelected) Color.Blue else Color.Transparent,
         border = BorderStroke(1.dp, Color.Blue)
     ) {
@@ -428,7 +425,7 @@ fun FilterChip(text: String, isSelected: Boolean, onSelected: () -> Unit) {
 
 @Composable
 fun MinMaxInputFields(minValueState: MutableState<Int?>,maxValueState: MutableState<Int?> ) {
-    // État pour stocker et contrôler les valeurs min et max
+
 
 
     Box(

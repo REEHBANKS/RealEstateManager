@@ -30,7 +30,7 @@ class ListPropertyViewModel @Inject constructor(
 
     private val _isEuro = MutableLiveData<Boolean>().apply {
         val sharedPref = context.getSharedPreferences("CurrencyPreference", Context.MODE_PRIVATE)
-        value = sharedPref.getBoolean("isEuro", true)
+        value = sharedPref.getBoolean("isEuro", false)
     }
 
     val isEuro: LiveData<Boolean> = _isEuro
@@ -83,7 +83,6 @@ class ListPropertyViewModel @Inject constructor(
         _isEuro.value?.let {
             if (it != isEuro) {
                 _isEuro.value = isEuro
-                // Force la re-création des données pour le LiveData converti.
                 propertiesWithMainPicture.value?.let { properties ->
                     _propertiesWithPicturesFiltered.value = if (isEuro) {
                         properties.map { it.convertToEuro() }

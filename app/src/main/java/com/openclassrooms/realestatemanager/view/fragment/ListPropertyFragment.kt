@@ -45,7 +45,7 @@ class ListPropertyFragment : Fragment() {
             val mainActivity = activity as? MainActivity
             val isTablet = mainActivity?.isTabletMode() ?: false
 
-            Log.d("ListPropertyFragment", "isTabletMode: $isTablet")
+
 
 
             if (isTablet) {
