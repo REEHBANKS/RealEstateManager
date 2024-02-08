@@ -8,8 +8,8 @@ class GetAllPropertiesWithMainPictureUseCase(
     private val propertyRepository: PropertyRepository,
     private val pictureRepository: PictureRepository
 ) {
-    suspend operator fun invoke(): List<PropertyWithMainPicture> {
-        val properties = propertyRepository.getAllProperties()
+    suspend operator fun invoke(isInternetAvailable: Boolean): List<PropertyWithMainPicture> {
+        val properties = propertyRepository.getAllProperties(isInternetAvailable)
         return properties.map { property ->
             val mainPicture = pictureRepository.getMainPictureForProperty(property.id)
             PropertyWithMainPicture(property, mainPicture)

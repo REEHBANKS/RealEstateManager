@@ -32,10 +32,10 @@ class SearchUseCase @Inject constructor(
         proximity: Set<String>,
         date: LocalDate?,
         filterByPhotoCount: Boolean,
-        neighborhood: String?
+        neighborhood: String?,isInternetAvailable: Boolean
     ): List<PropertyModels> {
         // Retrieve all properties from the repository.
-        val allProperties = propertyRepository.getAllProperties()
+        val allProperties = propertyRepository.getAllProperties(isInternetAvailable)
 
         // Apply filtering based on the given parameters and return the results.
         val filteredProperties = allProperties.filter { property ->

@@ -9,10 +9,10 @@ class AddPropertyUseCase(private val propertyRepository: PropertyRepository) {
         return try {
             // Appel au repository pour ajouter la propriété
             val newPropertyId = propertyRepository.addProperty(property)
-            // Renvoie l'ID de la nouvelle propriété si l'ajout est réussi
+
             newPropertyId
         } catch (e: Exception) {
-            // Gérer l'exception et renvoyer null en cas d'échec
+
             null
         }
     }

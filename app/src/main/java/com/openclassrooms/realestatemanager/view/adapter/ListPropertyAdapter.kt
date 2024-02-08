@@ -18,12 +18,18 @@ class PropertyAdapter(
 ) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
 
     private var properties: List<PropertyWithMainPicture> = listOf()
+    var isEuro: Boolean = false
 
     class PropertyViewHolder(val binding: FragmentListRealEstatePropertyFragmentItemBinding) : RecyclerView.ViewHolder(binding.root)
 
 
     fun submitList(newProperties: List<PropertyWithMainPicture>) {
         properties = newProperties
+        notifyDataSetChanged()
+    }
+
+    fun updateCurrency(isEuro: Boolean) {
+        this.isEuro = isEuro
         notifyDataSetChanged()
     }
 
@@ -38,7 +44,11 @@ class PropertyAdapter(
         holder.binding.textViewPropertyType.text = property.property.type
         holder.binding.textViewPropertyNeighborhood.text = property.property.neighborhood
 
-        val format = NumberFormat.getCurrencyInstance(Locale.FRANCE)
+        val format = if (isEuro) {
+            NumberFormat.getCurrencyInstance(Locale.FRANCE)
+        } else {
+            NumberFormat.getCurrencyInstance(Locale.US)
+        }
         val priceText = format.format(property.property.price)
         holder.binding.textViewPropertyPrice.text = priceText
 

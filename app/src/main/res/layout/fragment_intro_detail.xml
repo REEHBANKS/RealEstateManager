@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/imageViewIntro"
-        android:layout_width="709dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/picture_intro" />

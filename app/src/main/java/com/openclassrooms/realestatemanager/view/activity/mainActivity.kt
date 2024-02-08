@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.view.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var isTabletMode: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +29,12 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val isTabletMode = findViewById<View>(R.id.detail_container) != null
+         isTabletMode = findViewById<View>(R.id.detail_container) != null
 
+    }
 
-
-
+    fun isTabletMode(): Boolean {
+        return isTabletMode
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -106,7 +109,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (findViewById<View>(R.id.detail_container) != null) {
-            // Chargez le fragment d'introduction au lieu de montrer un détail initial
             supportFragmentManager.beginTransaction()
                 .replace(R.id.detail_container, IntroDetailFragment())
                 .commit()

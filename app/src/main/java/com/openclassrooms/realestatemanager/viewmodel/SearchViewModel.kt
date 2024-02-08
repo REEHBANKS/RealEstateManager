@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.viewmodel
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -8,15 +9,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.view.useCase.SearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor (
-    private val searchUseCase: SearchUseCase
+    private val searchUseCase: SearchUseCase,
+    @ApplicationContext private val context: Context
 ) : ViewModel(
 
 ) {
@@ -48,7 +52,8 @@ class SearchViewModel @Inject constructor (
                 proximity,
                 date,
                 filterByPhotoCount,
-                neighborhood
+                neighborhood,
+                Utils.isInternetAvailable(context)
             )
             _properties.postValue(results)
         }

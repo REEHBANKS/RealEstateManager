@@ -58,36 +58,49 @@ class PropertyRepository(
     }
 
 
-    suspend fun getAllProperties(): List<PropertyModels> {
+    suspend fun getAllProperties(isInternetAvailable: Boolean): List<PropertyModels> {
         Log.d("PropertyRepository", "Fetching properties...")
 
-        // Vérifier d'abord dans Room
+        // Vérifier d'abord la connexion réseau
+        if (isInternetAvailable) {
+            val querySnapshot = firestore.collection("properties").get().await()
+            val propertiesFromFirebase = querySnapshot.documents.mapNotNull { it.toObject<PropertyModels>() }
+
+            // Récupérer les propriétés locales
+            val localProperties = withContext(Dispatchers.IO) {
+                propertyDao.getAllProperties().asFlow().firstOrNull()
+            }?.map { it.toModel() }
+
+            if (propertiesFromFirebase.isNotEmpty()) {
+                Log.d("PropertyRepository", "Fetched properties from Firestore: ${propertiesFromFirebase.size}")
+
+                withContext(Dispatchers.IO) {
+                    // Ajouter les propriétés de Firebase dans Room s'il y a des différences
+                    val propertiesToAdd = propertiesFromFirebase.filterNot { localProperties?.contains(it) == true }
+                    if (propertiesToAdd.isNotEmpty()) {
+                        propertyDao.addProperties(propertiesToAdd.map { it.toEntity() })
+                    }
+                }
+
+                return propertiesFromFirebase
+            } else if (!localProperties.isNullOrEmpty()) {
+                Log.d("PropertyRepository", "No properties found in Firestore. Returning local properties.")
+                return localProperties
+            } else {
+                Log.d("PropertyRepository", "No properties found in Firestore or Room.")
+            }
+        } else {
+            Log.d("PropertyRepository", "Network is not available. Returning local properties.")
+        }
+
+        // Récupérer les propriétés locales si la connexion n'est pas disponible
         val localProperties = withContext(Dispatchers.IO) {
             propertyDao.getAllProperties().asFlow().firstOrNull()
         }?.map { it.toModel() }
-        if (!localProperties.isNullOrEmpty()) {
-            Log.d("PropertyRepository", "Found properties in Room: ${localProperties.size}")
-            return localProperties
-        } else {
-            Log.d("PropertyRepository", "No properties found in Room. Fetching from Firestore...")
-        }
 
-        // Si Room est vide, récupérer depuis Firebase et stocker dans Room
-        val querySnapshot = firestore.collection("properties").get().await()
-        val properties = querySnapshot.documents.mapNotNull { it.toObject<PropertyModels>() }
-
-        if (properties.isNotEmpty()) {
-            Log.d("PropertyRepository", "Fetched properties from Firestore: ${properties.size}")
-
-            withContext(Dispatchers.IO) {
-                propertyDao.addProperties(properties.map { it.toEntity() }) // Assurez-vous que cette méthode existe dans votre DAO
-            }
-        } else {
-            Log.d("PropertyRepository", "No properties found in Firestore.")
-        }
-
-        return properties
+        return localProperties ?: emptyList()
     }
+
 
 
     suspend fun getPropertyById(id: String): PropertyModels? {

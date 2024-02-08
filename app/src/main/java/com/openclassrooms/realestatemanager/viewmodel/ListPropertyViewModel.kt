@@ -37,7 +37,9 @@ class ListPropertyViewModel @Inject constructor(
 
     // LiveData qui contient la liste des propriétés, sans conversion.
     private val propertiesWithMainPicture: LiveData<List<PropertyWithMainPicture>> = liveData {
-        emit(getAllPropertiesWithMainPictureUseCase())
+        val isInternetAvailable = Utils.isInternetAvailable(context)
+        val properties = getAllPropertiesWithMainPictureUseCase(isInternetAvailable)
+        emit(properties)
     }
 
     // LiveData qui contient les propriétés converties selon la devise choisie.

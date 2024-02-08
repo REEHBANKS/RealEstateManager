@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="price_format">%d$</string>
+    <string name="price_format">%s</string>
     <string name="area_format">%d m²</string>
     <string name="rooms_format">%d rooms</string>
     <string name="bottom_login">Sign in with Login</string>
@@ -15,7 +15,6 @@
     <string name="error_authentication_canceled">Error authentication canceled</string>
     <string name="reset_password_email_sent">A password reset email has been sent. Please check your inbox.\n</string>
     <string name="error_sending_reset_email">Failed to send reset email. Please try again.</string>
-    <string name="sold">SOLD\n</string>
     <string name="price">PRICE\n</string>
     <string name="surface">SURFACE\n</string>
     <string name="cancel">Cancel</string>
@@ -37,4 +36,10 @@
     <string name="nearby">Nearby</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <!-- Property status -->
+    <string name="sold">Sold</string>
+    <string name="for_sale">For Sale</string>
+    <!-- Error or notification messages -->
+    <string name="entry_date_not_available">Entry date not available</string>
+    <string name="sold_date_not_available">Sold date not available</string>
 </resources>

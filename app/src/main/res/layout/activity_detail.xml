@@ -334,27 +334,6 @@
             app:layout_constraintStart_toEndOf="@id/iconAgentView"
             app:layout_constraintTop_toBottomOf="@+id/nearbyDetailPhoneTextView" />
 
-        <ImageButton
-            android:id="@+id/iconPhoneView"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="15dp"
-            android:src="@drawable/baseline_phone_24"
-            android:background="@android:color/transparent"
-
-            app:layout_constraintStart_toEndOf="@+id/agentNameTextView"
-            app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"/>
-
-        <ImageView
-            android:id="@+id/iconMailView"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="15dp"
-            android:src="@drawable/baseline_email_24"
-            app:layout_constraintTop_toBottomOf="@id/agentInfoTextView"
-            app:layout_constraintStart_toEndOf="@id/iconPhoneView"/>
 
         <ImageView
             android:id="@+id/mapContainer"

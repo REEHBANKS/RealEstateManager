@@ -1,8 +1,11 @@
 package com.openclassrooms.realestatemanager.view.activity
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,6 +23,7 @@ import com.openclassrooms.realestatemanager.databinding.ActivityDetailBinding
 import com.openclassrooms.realestatemanager.view.adapter.PropertyImagesAdapter
 import com.openclassrooms.realestatemanager.viewmodel.PropertyDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.NumberFormat
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -34,6 +38,8 @@ class DetailActivity : AppCompatActivity() {
     private var propertyId: String = ""
 
 
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -45,6 +51,9 @@ class DetailActivity : AppCompatActivity() {
         observeAgentViewModel()
 
         val apiKey = BuildConfig.API_KEY
+
+        val sharedPref = getSharedPreferences("CurrencyPreference", Context.MODE_PRIVATE)
+        val isEuro = sharedPref.getBoolean("isEuro", false)
 
 
         // Retrieve data passed in the intent
@@ -64,8 +73,17 @@ class DetailActivity : AppCompatActivity() {
         val entryTimestamp = intent.getLongExtra("EXTRA_ENTRY_DATE", -1L)
         val soldTimestamp = intent.getLongExtra("EXTRA_SOLD_DATE", -1L)
 
+
+
+        val format = if (isEuro) {
+            NumberFormat.getCurrencyInstance(Locale.FRANCE)
+        } else {
+            NumberFormat.getCurrencyInstance(Locale.US)
+        }
+        val formattedPrice = format.format(price)
+
         // Use the data to configure TextViews
-        findViewById<TextView>(R.id.priceTextView).text = getString(R.string.price_format, price)
+        findViewById<TextView>(R.id.priceTextView).text = getString(R.string.price_format, formattedPrice)
         findViewById<TextView>(R.id.typeDetailPhoneTextView).text = type
         findViewById<TextView>(R.id.surfaceDetailPhoneTextView).text = area.toString()
         findViewById<TextView>(R.id.locationDetailPhoneTextView).text = location
@@ -79,7 +97,7 @@ class DetailActivity : AppCompatActivity() {
 
         // Build URL  Google Maps Static API
         val staticMapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" +
-                "$latitude,$longitude&zoom=18&size=600x600&markers=color:red%7C$latitude,$longitude&key=$apiKey"
+                "$latitude,$longitude&zoom=21+&size=600x600&markers=color:red%7C$latitude,$longitude&key=$apiKey"
 
         Glide.with(this)
             .load(staticMapUrl)

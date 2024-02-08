@@ -35,7 +35,9 @@ import com.openclassrooms.realestatemanager.data.models.modelFirebase.PhotoDescr
 import com.openclassrooms.realestatemanager.data.models.modelFirebase.PropertyModels
 import com.openclassrooms.realestatemanager.utils.ImageHelper
 import com.openclassrooms.realestatemanager.utils.PhotoDetailsHelper
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.view.adapter.PhotoAdapter
+import com.openclassrooms.realestatemanager.view.fragment.ListPropertyFragment
 import com.openclassrooms.realestatemanager.viewmodel.PropertyFormViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.ParseException
@@ -107,6 +109,11 @@ class PropertyFormActivity : AppCompatActivity() {
         val editTextSaleDate = findViewById<EditText>(R.id.editTextSaleDate)
         val switchSold = findViewById<SwitchMaterial>(R.id.switchSold)
         editTextSaleDate.visibility = if (switchSold.isChecked) View.VISIBLE else View.GONE
+
+        switchSold.setOnCheckedChangeListener { _, isChecked ->
+            editTextSaleDate.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
 
         setupTypeSpinner()
         setupSaleDate()
@@ -255,10 +262,10 @@ class PropertyFormActivity : AppCompatActivity() {
 
     private fun updateRecyclerViewWithNewPhoto(photoDescription: PhotoDescription) {
 
-        photos.add(photoDescription)
-        Log.d("PropertyFormActivity", "Before adding, photos.size=${photos.size}")
+
         photoAdapter.updatePhotos(photos)
-        Log.d("PropertyFormActivity", "After adding, photos.size=${photos.size}")
+        photoAdapter.notifyDataSetChanged()
+
     }
 
 
@@ -344,36 +351,52 @@ class PropertyFormActivity : AppCompatActivity() {
         val switchSold = findViewById<SwitchMaterial>(R.id.switchSold)
         val editTextSaleDate = findViewById<EditText>(R.id.editTextSaleDate)
 
+        // Configurer la visibilité initiale de editTextSaleDate ici, basée sur l'état actuel du switch
+        editTextSaleDate.visibility = if (switchSold.isChecked) View.VISIBLE else View.GONE
+
+        // Configurer l'écouteur pour le changement d'état du switch
         switchSold.setOnCheckedChangeListener { _, isChecked ->
+            // Modifier la visibilité de editTextSaleDate quand l'état du switch change
+            editTextSaleDate.visibility = if (isChecked) View.VISIBLE else View.GONE
+
+            // S'il est activé, afficher également le DatePickerDialog
             if (isChecked) {
-                // Afficher le DatePickerDialog quand le bien est marqué comme vendu
-                val calendar = Calendar.getInstance()
-                val datePickerDialog = DatePickerDialog(
-                    this,
-                    { _, year, monthOfYear, dayOfMonth ->
-                        // Utilisez le format "yyyy-MM-dd"
-                        val dateString = "$year-${monthOfYear + 1}-$dayOfMonth"
-                        editTextSaleDate.setText(dateString)
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-                )
-                datePickerDialog.show()
-                editTextSaleDate.visibility = View.VISIBLE
-            } else {
-                editTextSaleDate.visibility = View.GONE
-                editTextSaleDate.text.clear()
+                showDatePicker(editTextSaleDate)
             }
         }
     }
 
+
+    private fun showDatePicker(editText: EditText) {
+        val calendar = Calendar.getInstance()
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, year, monthOfYear, dayOfMonth ->
+                // Format "dd-MM-yyyy"
+                val dateString = String.format(Locale.FRANCE, "%02d-%02d-%d", dayOfMonth, monthOfYear + 1, year)
+                editText.setText(dateString)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        // Afficher le DatePickerDialog avec la date actuelle ou la date préalablement sélectionnée
+        val currentDate = getSaleDate() ?: calendar.time
+        calendar.time = currentDate
+        datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+        datePickerDialog.show()
+    }
+
+
+
     private fun getSaleDate(): Date? {
-        val isSold = findViewById<Switch>(R.id.switchSold).isChecked
+        val isSold = findViewById<SwitchMaterial>(R.id.switchSold).isChecked
+        val editTextSaleDate = findViewById<EditText>(R.id.editTextSaleDate)
+        val dateString = editTextSaleDate.text.toString()
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.FRANCE)
 
-        return if (isSold) {
-            val dateString = findViewById<EditText>(R.id.editTextSaleDate).text.toString()
+        return if (isSold && dateString.isNotBlank()) {
             try {
                 dateFormat.parse(dateString) // Convertit la chaîne de caractères en Date
             } catch (e: ParseException) {
@@ -383,6 +406,7 @@ class PropertyFormActivity : AppCompatActivity() {
             null
         }
     }
+
 
 
     private fun submitProperty() {
@@ -431,8 +455,11 @@ class PropertyFormActivity : AppCompatActivity() {
             agentId = FirebaseAuth.getInstance().currentUser?.uid ?: "anonymous"
         )
 
-        val currentDate = Calendar.getInstance().time // Obtenez la date actuelle
+        val currentDateStr = Utils.getTodayDate()
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+        val currentDate = dateFormat.parse(currentDateStr)
         val propertyWithDate = property.copy(marketEntryDate = currentDate)
+
 
 
 
@@ -454,13 +481,12 @@ class PropertyFormActivity : AppCompatActivity() {
                 PropertyFormViewModel.OperationStatus.SUCCESS -> {
                     Toast.makeText(
                         this,
-                        "Property and photos added successfully",
+                        "Property and photos added / updated  successfully",
                         Toast.LENGTH_LONG
                     ).show()
-                    findNavController(R.id.nav_host_fragment).popBackStack(
-                        R.id.listRealEstatePropertyFragment2,
-                        false
-                    )
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
 
                 }
 
